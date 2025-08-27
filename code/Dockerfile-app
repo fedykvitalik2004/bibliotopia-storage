@@ -1,0 +1,10 @@
+FROM maven:3.9 AS build
+WORKDIR /app
+COPY . .
+RUN mvn -B clean package -DSkipTests
+
+FROM openjdk:17 AS run
+WORKDIR /app
+COPY --from=build /app/boot/target/boot-*.jar app.jar
+ENTRYPOINT ["java", "-jar", "app.jar"]
+EXPOSE 8080
