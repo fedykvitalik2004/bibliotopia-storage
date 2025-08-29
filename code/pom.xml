@@ -17,25 +17,25 @@
     <name>code</name>
     <description>code</description>
     <url/>
-    <licenses>
-        <license/>
-    </licenses>
-    <developers>
-        <developer/>
-    </developers>
 
     <modules>
         <module>api-rest</module>
         <module>boot</module>
+        <module>coverage</module>
     </modules>
-    <scm>
-        <connection/>
-        <developerConnection/>
-        <tag/>
-        <url/>
-    </scm>
+
     <properties>
         <java.version>17</java.version>
+
+        <!--        Sonarqube properties-->
+        <sonar.host.url>http://localhost:9000</sonar.host.url>
+        <sonar.projectKey>bibliotopia-sdtorage</sonar.projectKey>
+        <sonar.projectName>Bibliotopia Stordage</sonar.projectName>
+
+        <jacoco.utReportFolder>${project.build.directory}/jacoco-unit</jacoco.utReportFolder>
+        <jacoco.utReportFile>${jacoco.utReportFolder}/jacoco-unit.exec</jacoco.utReportFile>
+        <skip.unit.tests>false</skip.unit.tests>
+        <skip.integration.tests>false</skip.integration.tests>
     </properties>
     <dependencies>
         <dependency>
@@ -88,6 +88,52 @@
                 <configuration>
                     <mainClass>org.vitalii.fedyk.boot.BootApplication</mainClass>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>5.1.0.4751</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version>
+                <configuration>
+                    <includes>
+                        <include>**/*Test.java</include>
+                    </includes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>3.1.2</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <includes>
+                        <include>**/*IT.java</include>
+                    </includes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.12</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

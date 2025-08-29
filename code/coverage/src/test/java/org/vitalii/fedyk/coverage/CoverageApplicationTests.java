@@ -1,10 +1,10 @@
-package org.vitalii.fedyk.boot;
+package org.vitalii.fedyk.coverage;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class BootApplicationTests {
+class CoverageApplicationTests {
 
   @Test
   void contextLoads() {
