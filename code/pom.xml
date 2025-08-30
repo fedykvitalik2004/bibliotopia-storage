@@ -94,7 +94,6 @@
                 <artifactId>sonar-maven-plugin</artifactId>
                 <version>5.1.0.4751</version>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -135,6 +134,30 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>3.4.0</version>
+                <executions>
+                    <execution>
+                        <id>validate</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <configLocation>google_checks.xml</configLocation>
+                            <consoleOutput>true</consoleOutput>
+                            <violationSeverity>warning</violationSeverity>
+                            <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                            <failOnViolation>true</failOnViolation>
+                            <logViolationsToConsole>true</logViolationsToConsole>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+
         </plugins>
     </build>
 
