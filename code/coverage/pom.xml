@@ -9,24 +9,35 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>coverage</artifactId>
-    <name>coverage</name>
-    <url/>
+    <packaging>pom</packaging>
 
-    <properties>
-        <java.version>17</java.version>
-    </properties>
+    <artifactId>coverage</artifactId>
+    <name>${project.groupId}:${project.artifactId}</name>
 
     <dependencies>
         <dependency>
             <groupId>org.vitalii.fedyk</groupId>
-            <artifactId>api-rest</artifactId>
-            <version>${project.parent.version}</version>
+            <artifactId>boot</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.vitalii.fedyk</groupId>
+            <artifactId>infrastructure</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.vitalii.fedyk</groupId>
+            <artifactId>domain</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.vitalii.fedyk</groupId>
+            <artifactId>api-rest</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.vitalii.fedyk</groupId>
             <artifactId>boot</artifactId>
-            <version>${project.parent.version}</version>
         </dependency>
     </dependencies>
 
