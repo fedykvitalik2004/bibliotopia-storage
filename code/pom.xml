@@ -29,8 +29,8 @@
 
         <!--        Sonarqube properties-->
         <sonar.host.url>http://localhost:9000</sonar.host.url>
-        <sonar.projectKey>bibliotopia-sdtorage</sonar.projectKey>
-        <sonar.projectName>Bibliotopia Stordage</sonar.projectName>
+        <sonar.projectKey>bibliotopia-storage</sonar.projectKey>
+        <sonar.projectName>Bibliotopia Storage</sonar.projectName>
 
         <jacoco.utReportFolder>${project.build.directory}/jacoco-unit</jacoco.utReportFolder>
         <jacoco.utReportFile>${jacoco.utReportFolder}/jacoco-unit.exec</jacoco.utReportFile>
@@ -152,12 +152,33 @@
                             <includeTestSourceDirectory>true</includeTestSourceDirectory>
                             <failOnViolation>true</failOnViolation>
                             <logViolationsToConsole>true</logViolationsToConsole>
+                            <suppressionsLocation>suppressions.xml</suppressionsLocation>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
-
-
+            <plugin>
+                <groupId>com.theoryinpractise</groupId>
+                <artifactId>googleformatter-maven-plugin</artifactId>
+                <version>1.7.3</version>
+                <executions>
+                    <execution>
+                        <id>reformat-sources</id>
+                        <configuration>
+                            <includeStale>false</includeStale>
+                            <style>GOOGLE</style>
+                            <filterModified>false</filterModified>
+                            <skip>false</skip>
+                            <fixImports>false</fixImports>
+                            <maxLineLength>100</maxLineLength>
+                        </configuration>
+                        <goals>
+                            <goal>format</goal>
+                        </goals>
+                        <phase>process-sources</phase>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 

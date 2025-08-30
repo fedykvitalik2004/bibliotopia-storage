@@ -9,5 +9,4 @@ public class CoverageApplication {
   public static void main(String[] args) {
     SpringApplication.run(CoverageApplication.class, args);
   }
-
 }
