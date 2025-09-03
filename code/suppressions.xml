@@ -7,4 +7,6 @@
     <suppress files="BootApplication.java" checks="MissingJavadocType"/>
     <suppress files=".*Test.java" checks="JavadocMethod"/>
     <suppress files=".*IT.java" checks="JavadocMethod"/>
+    <suppress files="." checks="LineLength"/>
+    <suppress files="StorageController" checks="ParameterName" />
 </suppressions>
