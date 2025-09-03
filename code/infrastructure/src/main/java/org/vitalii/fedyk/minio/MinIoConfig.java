@@ -59,7 +59,7 @@ public class MinIoConfig {
                             AwsBasicCredentials.create(minIoProperties.getAccessKeyId(), minIoProperties.getSecretKey())
                     )
             )
-            .region(Region.of(minIoProperties.getRegion()))
+            .region(Region.US_EAST_1)
             .serviceConfiguration(
                     S3Configuration.builder()
                             .pathStyleAccessEnabled(true)

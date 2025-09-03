@@ -6,4 +6,3 @@ minio:
   access-key-id: admin
   secret-key: password
   endpoint: http://localhost:9090
-  region: us-east-1
