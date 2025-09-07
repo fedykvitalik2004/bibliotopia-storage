@@ -1,10 +1,10 @@
-package org.vitalii.fedyk.minio;
+package org.vitalii.fedyk.config;
 
 import java.net.URI;
-
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.vitalii.fedyk.minio.MinIoProperties;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
