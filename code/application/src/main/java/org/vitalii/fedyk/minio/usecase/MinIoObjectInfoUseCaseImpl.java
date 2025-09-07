@@ -1,4 +1,4 @@
-package org.vitalii.fedyk;
+package org.vitalii.fedyk.minio.usecase;
 
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -6,8 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.vitalii.fedyk.minio.model.MinIoObjectInfo;
 import org.vitalii.fedyk.minio.repository.MinIoObjectInfoRepository;
-import org.vitalii.fedyk.minio.usecase.MinIoInteractionUseCase;
-import org.vitalii.fedyk.minio.usecase.MinIoObjectInfoUseCase;
 
 @Service
 public class MinIoObjectInfoUseCaseImpl implements MinIoObjectInfoUseCase {

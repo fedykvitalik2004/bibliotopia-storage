@@ -8,6 +8,7 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,7 +28,6 @@ import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignReques
  * {@inheritDoc}
  */
 @Service
-@RequiredArgsConstructor
 @Slf4j
 public class MinIoInteractionUseCaseImpl implements MinIoInteractionUseCase {
   private final S3Client s3Client;
@@ -36,6 +36,12 @@ public class MinIoInteractionUseCaseImpl implements MinIoInteractionUseCase {
 
   @Value("#{ '${minio.endpoint}' + '/minio/health/live' }")
   private String minioHealthUrl;
+
+  @Autowired
+  public MinIoInteractionUseCaseImpl(final S3Client s3Client, final S3Presigner s3Presigner) {
+    this.s3Client = s3Client;
+    this.s3Presigner = s3Presigner;
+  }
 
   @Override
   public MinIoObjectInfo uploadFile(final String bucketName,
