@@ -2,6 +2,7 @@ package org.vitalii.fedyk.minio.usecase;
 
 import org.springframework.web.multipart.MultipartFile;
 import org.vitalii.fedyk.minio.model.MinIoObjectInfo;
+import org.vitalii.fedyk.minio.model.MinIoUploadResultVO;
 
 /**
  * Use case interface for interacting with MinIO (or S3-compatible) storage.
@@ -11,7 +12,7 @@ import org.vitalii.fedyk.minio.model.MinIoObjectInfo;
  * </p>
  */
 public interface MinIoInteractionUseCase {
-  MinIoObjectInfo uploadFile(String bucketName, String objectKey, MultipartFile file);
+  MinIoUploadResultVO uploadFile(String bucketName, String objectKey, MultipartFile file);
 
   String getUrl(String bucketName, String objectKey);
 }

@@ -17,6 +17,8 @@ public class MinIoObjectInfo {
   private UUID id;
   private String bucketName;
   private String objectName;
+  private long size;
+  private String contentType;
   private OffsetDateTime createdAt;
   private String url;
 }
