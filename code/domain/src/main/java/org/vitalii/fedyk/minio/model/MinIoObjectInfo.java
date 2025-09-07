@@ -12,10 +12,11 @@ import lombok.Setter;
 @AllArgsConstructor
 @Setter
 @Getter
-@Builder
+@Builder(toBuilder = true)
 public class MinIoObjectInfo {
   private UUID id;
   private String bucketName;
   private String objectName;
   private OffsetDateTime createdAt;
+  private String url;
 }
