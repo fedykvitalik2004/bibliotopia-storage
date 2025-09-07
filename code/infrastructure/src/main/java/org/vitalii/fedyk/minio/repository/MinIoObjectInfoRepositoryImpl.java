@@ -26,8 +26,8 @@ public class MinIoObjectInfoRepositoryImpl implements MinIoObjectInfoRepository 
 
   @Override
   public Optional<MinIoObjectInfo> findByBucketNameAndObjectName(final String bucketName, final String objectName) {
-    return minIoObjectInfoJpaAdapter.findByBucketNameAndObjectName(bucketName, objectName).
-            map(mapper::toModel);
+    return minIoObjectInfoJpaAdapter.findByBucketNameAndObjectName(bucketName, objectName)
+                    .map(mapper::toModel);
   }
 
   @Override
