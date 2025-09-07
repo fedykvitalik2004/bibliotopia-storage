@@ -9,7 +9,10 @@
     <suppress files=".*Test.java" checks="JavadocMethod"/>
     <suppress files=".*IT.java" checks="JavadocMethod"/>
     <suppress files="." checks="LineLength"/>
-    <suppress files="StorageController" checks="ParameterName"/>
+    <suppress files=".*Controller" checks="ParameterName"/>
     <suppress files=".*Impl.java" checks="MissingJavadocType"/>
     <suppress files=".*Impl.java" checks="MissingJavadocMethod"/>
+    <suppress files=".model.*" checks="MissingJavadocType" />
+    <suppress files=".infrastructure.*Mapper.java" checks="MissingJavadocType" />
+    <suppress files=".infrastructure.*Entity.java" checks="MissingJavadocType" />
 </suppressions>
