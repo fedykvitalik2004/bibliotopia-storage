@@ -66,7 +66,7 @@ public class FileStorageUseCaseImpl implements FileStorageUseCase {
     if (file == null) {
       throw new IllegalArgumentException("File cannot be null");
     }
-    if (file.content() == null || file.content().length == 0 ) {
+    if (file.getContent() == null || file.getContent().length == 0 ) {
       throw new IllegalArgumentException("File content cannot be empty");
     }
   }

@@ -68,12 +68,12 @@ public class MinioFileStorageRepository implements FileStorageRepository {
               PutObjectRequest.builder()
                       .bucket(location.bucketName())
                       .key(location.objectKey())
-                      .contentType(file.contentType())
-                      .contentLength(file.size())
+                      .contentType(file.getContentType())
+                      .contentLength(file.getSize())
                       .build(),
               RequestBody.fromInputStream(
-                      new ByteArrayInputStream(file.content()),
-                      file.size())
+                      new ByteArrayInputStream(file.getContent()),
+                      file.getSize())
       );
 
       if (!response.sdkHttpResponse().isSuccessful()) {
@@ -83,7 +83,7 @@ public class MinioFileStorageRepository implements FileStorageRepository {
 
       final String accessUrl = generateAccessUrl(location);
 
-      return new FileStorageResult(location, accessUrl, file.size(), file.contentType());
+      return new FileStorageResult(location, accessUrl, file.getSize(), file.getContentType());
 
     } catch (S3Exception e) {
       log.error("S3 error during file storage: {}", e.getMessage(), e);
