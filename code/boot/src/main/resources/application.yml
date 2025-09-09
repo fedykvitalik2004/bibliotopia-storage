@@ -1,8 +1,24 @@
 spring:
   application:
     name: boot
+  jackson:
+    time-zone: UTC
+  datasource:
+    url: jdbc:postgresql://localhost:5434/mydb
+    username: myuser
+    password: mypassword
+    driver-class-name: org.postgresql.Driver
 
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 minio:
   access-key-id: admin
   secret-key: password
   endpoint: http://localhost:9090
+
