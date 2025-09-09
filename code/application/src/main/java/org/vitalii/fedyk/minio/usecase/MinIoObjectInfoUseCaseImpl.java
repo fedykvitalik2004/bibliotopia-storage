@@ -2,9 +2,13 @@ package org.vitalii.fedyk.minio.usecase;
 
 import java.io.IOException;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import lombok.experimental.UtilityClass;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.vitalii.fedyk.minio.exception.FileProcessingException;
 import org.vitalii.fedyk.minio.model.FileStorageResult;
 import org.vitalii.fedyk.minio.model.FileUpload;
 import org.vitalii.fedyk.minio.model.MinIoObjectInfo;
@@ -24,14 +28,9 @@ public class MinIoObjectInfoUseCaseImpl implements MinIoObjectInfoUseCase {
 
   @Override
   public MinIoObjectInfo save(final String appName, final MultipartFile file) {
-    final String fileName = UUID.randomUUID().toString();
+    final String fileName = UUID.randomUUID() + FileUtils.getExtension(file.getName());
     final StorageLocation storageLocation = new StorageLocation(appName, fileName);
-    byte[] fileBytes = null;
-    try {
-      fileBytes = file.getBytes();
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+    final byte[] fileBytes = getFileBytes(file);
     final FileUpload fileUpload = new FileUpload(fileName, fileBytes, file.getContentType(), file.getSize());
     final FileStorageResult fileStorageResult = fileStorageUseCase.uploadFile(storageLocation, fileUpload);
 
@@ -55,5 +54,33 @@ public class MinIoObjectInfoUseCaseImpl implements MinIoObjectInfoUseCase {
     return minIoObjectInfo.toBuilder()
             .url(url)
             .build();
+  }
+
+  public byte[] getFileBytes(final MultipartFile file) {
+    byte[] fileBytes = null;
+    try {
+      fileBytes = file.getBytes();
+    } catch (IOException e) {
+      throw new FileProcessingException("Failed to read bytes from the file.", e);
+    }
+    return fileBytes;
+  }
+
+  @UtilityClass
+  private static class FileUtils {
+    private static final Pattern EXTENSION_PATTERN = Pattern.compile("\\.([^.]+)$");
+
+    public static String getExtension(final String fileName) {
+      if (fileName == null || fileName.isEmpty()) {
+        return "";
+      }
+
+      final Matcher matcher = EXTENSION_PATTERN.matcher(fileName);
+      if (matcher.find()) {
+        return "." + matcher.group(1);
+      } else {
+        return "";
+      }
+    }
   }
 }

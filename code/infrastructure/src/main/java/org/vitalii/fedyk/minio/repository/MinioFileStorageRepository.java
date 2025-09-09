@@ -2,11 +2,13 @@ package org.vitalii.fedyk.minio.repository;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,11 +20,14 @@ import org.vitalii.fedyk.minio.model.StorageLocation;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.CreateBucketRequest;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.HeadBucketRequest;
+import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
 import software.amazon.awssdk.services.s3.model.NoSuchBucketException;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectResponse;
 import software.amazon.awssdk.services.s3.model.S3Exception;
+import software.amazon.awssdk.services.s3.model.S3Object;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
 
@@ -60,7 +65,7 @@ public class MinioFileStorageRepository implements FileStorageRepository {
   }
 
   @Override
-  public FileStorageResult store(StorageLocation location, FileUpload file) {
+  public FileStorageResult store(final StorageLocation location, final FileUpload file) {
     try {
       ensureBucketExists(location.bucketName());
 
@@ -95,7 +100,7 @@ public class MinioFileStorageRepository implements FileStorageRepository {
   }
 
   @Override
-  public String generateAccessUrl(StorageLocation location) {
+  public String generateAccessUrl(final StorageLocation location) {
     try {
       GetObjectPresignRequest request = GetObjectPresignRequest.builder()
               .signatureDuration(Duration.ofHours(1))
@@ -137,7 +142,7 @@ public class MinioFileStorageRepository implements FileStorageRepository {
     }
   }
 
-  private void ensureBucketExists(String bucketName) {
+  private void ensureBucketExists(final String bucketName) {
     try {
       s3Client.headBucket(HeadBucketRequest.builder().bucket(bucketName).build());
     } catch (NoSuchBucketException e) {
@@ -150,5 +155,24 @@ public class MinioFileStorageRepository implements FileStorageRepository {
     } catch (S3Exception e) {
       throw new FileStorageException("Failed to check bucket existence: " + bucketName, e);
     }
+  }
+
+  @Override
+  public InputStream getObjectStream(final String bucketName, final String objectName) {
+    return s3Client.getObject(GetObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(objectName)
+            .build());
+  }
+
+  @Override
+  public List<String> getFileNames(final String bucketName) {
+    final ListObjectsV2Request request = ListObjectsV2Request.builder()
+            .bucket(bucketName)
+            .build();
+
+    return s3Client.listObjectsV2Paginator(request).contents().stream()
+            .map(S3Object::key)
+            .toList();
   }
 }

@@ -1,5 +1,7 @@
 package org.vitalii.fedyk.minio.repository;
 
+import java.io.InputStream;
+import java.util.List;
 import org.vitalii.fedyk.minio.model.FileStorageResult;
 import org.vitalii.fedyk.minio.model.FileUpload;
 import org.vitalii.fedyk.minio.model.StorageLocation;
@@ -13,4 +15,8 @@ public interface FileStorageRepository {
   String generateAccessUrl(StorageLocation location);
 
   boolean isHealthy();
+
+  InputStream getObjectStream(String bucketName, String objectName);
+
+  List<String> getFileNames(String bucketName);
 }
