@@ -7,10 +7,12 @@ info:
     name: Vitalii Fedyk
     email: fedykvitalik2004@gmail.com
 paths:
-  /storage/upload:
+  /storage:
     post:
       summary: Upload a file to a specified storage backend
       operationId: uploadFile
+      parameters:
+        - $ref: '#/components/parameters/XAppName'
       tags:
         - Storage
       requestBody:
@@ -21,17 +23,58 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: File saved successfully
-                  location:
-                    type: string
-                    description: Location or URL where the file is stored
-                    example: storage-files/myfile.txt
-
+                $ref: '#/components/schemas/FileUploadResponse'
+  /storage/{fileId}:
+    get:
+      summary: Get a file information by its ID
+      operationId: findById
+      parameters:
+        - $ref: '#/components/parameters/XAppName'
+        - $ref: '#/components/parameters/fileId'
+      tags:
+        - Storage
+      responses:
+        '200':
+          description: File retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileUploadResponse'
+        '404':
+          description: File not found
+  /storage/download:
+    get:
+      summary: Download a ZIP file
+      parameters:
+        - $ref: '#/components/parameters/XAppName'
+      operationId: downloadZip
+      tags:
+        - Storage
+      responses:
+        '200':
+          description: ZIP file
+          content:
+            application/zip:
+              schema:
+                type: string
+                format: binary
 components:
+  parameters:
+    XAppName:
+      name: X-App-Name
+      description: Name of the application making the request
+      in: header
+      required: true
+      schema:
+        type: string
+    fileId:
+      name: fileId
+      in: path
+      description: The unique ID of the file
+      required: true
+      schema:
+        type: string
+        format: uuid
   requestBodies:
     UploadFileDto:
       required: true
@@ -41,26 +84,36 @@ components:
             type: object
             required:
               - file
-              - storageType
             properties:
               file:
                 type: string
                 format: binary
                 description: The file to upload
-              storageType:
-                type: string
-                description: Storage backend to use
-                enum:
-                  - filesystem
-                  - s3
-              duration:
-                type: string
-                description: Duration to keep the file in the format of ISO 8601 duration
-                example: PT24H
-
-
-
-
-
-
-
+  schemas:
+   FileUploadResponse:
+     type: object
+     required:
+       - id
+       - bucketName
+       - objectName
+       - url
+       - createdAt
+     properties:
+       id:
+         type: string
+         format: uuid
+         description: Id
+       bucketName:
+         type: string
+         description: App name
+       objectName:
+         type: string
+         description: Key of the file
+       url:
+         type: string
+         format: string
+         description: Public or signed URL to access the object. It is temporary.
+       createdAt:
+         type: string
+         format: date-time
+         description: ISO 8601/RFC 3339 timestamp with timezone (e.g., 2025-09-07T18:25:43+03:00)
