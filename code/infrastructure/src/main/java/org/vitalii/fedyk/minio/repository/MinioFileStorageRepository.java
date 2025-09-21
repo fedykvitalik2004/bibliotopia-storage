@@ -103,7 +103,7 @@ public class MinioFileStorageRepository implements FileStorageRepository {
   public String generateAccessUrl(final StorageLocation location) {
     try {
       GetObjectPresignRequest request = GetObjectPresignRequest.builder()
-              .signatureDuration(Duration.ofHours(1))
+              .signatureDuration(Duration.ofDays(7))
               .getObjectRequest(builder -> builder
                       .bucket(location.bucketName())
                       .key(location.objectKey()))

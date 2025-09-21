@@ -8,6 +8,7 @@ import lombok.experimental.UtilityClass;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.vitalii.fedyk.common.usecase.FileProcessingUseCase;
 import org.vitalii.fedyk.minio.exception.FileProcessingException;
 import org.vitalii.fedyk.minio.model.FileStorageResult;
 import org.vitalii.fedyk.minio.model.FileUpload;
@@ -19,19 +20,27 @@ import org.vitalii.fedyk.minio.repository.MinIoObjectInfoRepository;
 public class MinIoObjectInfoUseCaseImpl implements MinIoObjectInfoUseCase {
   private final FileStorageUseCase fileStorageUseCase;
   private final MinIoObjectInfoRepository repository;
+  private final FileProcessingUseCase fileProcessingUseCase;
 
   @Autowired
-  public MinIoObjectInfoUseCaseImpl(FileStorageUseCase fileStorageUseCase, MinIoObjectInfoRepository repository) {
+  public MinIoObjectInfoUseCaseImpl(FileStorageUseCase fileStorageUseCase, MinIoObjectInfoRepository repository, FileProcessingUseCase fileProcessingUseCase) {
     this.fileStorageUseCase = fileStorageUseCase;
     this.repository = repository;
+    this.fileProcessingUseCase = fileProcessingUseCase;
   }
 
   @Override
   public MinIoObjectInfo save(final String appName, final MultipartFile file) {
     final String fileName = UUID.randomUUID() + FileUtils.getExtension(file.getName());
     final StorageLocation storageLocation = new StorageLocation(appName, fileName);
-    final byte[] fileBytes = getFileBytes(file);
-    final FileUpload fileUpload = new FileUpload(fileName, fileBytes, file.getContentType(), file.getSize());
+    byte[] fileBytes = getFileBytes(file);
+    final String contentType = file.getContentType();
+
+    if (contentType != null && contentType.startsWith("image/")) {
+      fileBytes = fileProcessingUseCase.compressImage(fileBytes);
+    }
+
+    final FileUpload fileUpload = new FileUpload(fileName, fileBytes, contentType, fileBytes.length);
     final FileStorageResult fileStorageResult = fileStorageUseCase.uploadFile(storageLocation, fileUpload);
 
     final MinIoObjectInfo toSave = MinIoObjectInfo.builder()

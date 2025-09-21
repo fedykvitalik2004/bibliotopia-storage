@@ -5,6 +5,16 @@ services:
       dockerfile: Dockerfile-app
     ports:
       - "8090:8080"
+  app_db:
+    image: postgres:17
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: mydb
+      TZ: UTC
+    ports:
+      - "5434:5432"
   sonar_db:
     image: postgres:16
     container_name: sonar_db
@@ -37,7 +47,6 @@ services:
       - sonarqube_data:/opt/sonarqube/data
       - sonarqube_extensions:/opt/sonarqube/extensions
       - sonarqube_logs:/opt/sonarqube/logs
-
   minio:
     image: minio/minio:latest
     container_name: minio
@@ -50,7 +59,6 @@ services:
     command: server /data --console-address ":9001"
     volumes:
       - minio_data:/data
-
 volumes:
   sonar_db_data:
   sonarqube_data:

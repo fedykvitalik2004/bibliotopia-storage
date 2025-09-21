@@ -58,13 +58,39 @@ paths:
               schema:
                 type: string
                 format: binary
+  /generation/barcodes/{isbn}:
+    post:
+      summary: Generate and save a barcode image for an ISBN
+      operationId: generateBarcode
+      parameters:
+        - name: isbn
+          in: path
+          required: true
+          description: ISBN-13 code to generate a barcode for
+          schema:
+            type: string
+            pattern: '^[0-9]{13}$'
+      tags:
+        - Generation
+      responses:
+        '200':
+          description: Barcode generated and stored successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  url:
+                    type: string
+                    example: "Url"
+        '400':
+          description: Invalid ISBN
 components:
   parameters:
     XAppName:
       name: X-App-Name
-      description: Name of the application making the request
+      description: Name of the application making the request. It is required
       in: header
-      required: true
       schema:
         type: string
     fileId:

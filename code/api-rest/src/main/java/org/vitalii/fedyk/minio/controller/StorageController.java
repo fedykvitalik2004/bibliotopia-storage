@@ -32,21 +32,24 @@ public class StorageController implements StorageApi {
   private MinIoObjectInfoMapper mapper;
 
   @Override
-  public ResponseEntity<FileUploadResponse> uploadFile(final String xAppName, final MultipartFile file) {
+  @RequiredHeader("X-App-Name")
+  public ResponseEntity<FileUploadResponse> uploadFile(final MultipartFile file, final String xAppName) {
     final MinIoObjectInfo saved = minIoObjectInfoUseCase.save(xAppName, file);
     return ResponseEntity.ok(mapper.toFileUploadResponse(saved));
   }
 
   @Override
-  public ResponseEntity<FileUploadResponse> findById(final String xAppName, final UUID id) {
-    final MinIoObjectInfo retrieved = minIoObjectInfoUseCase.findById(id);
+  @RequiredHeader("X-App-Name")
+  public ResponseEntity<FileUploadResponse> findById(final UUID fileId, final String xAppName) {
+    final MinIoObjectInfo retrieved = minIoObjectInfoUseCase.findById(fileId);
     return ResponseEntity.ok(mapper.toFileUploadResponse(retrieved));
   }
 
   @SneakyThrows
   @Override
+  @RequiredHeader("X-App-Name")
   public ResponseEntity<Resource> downloadZip(final String xAppName) {
-    //todo: replace it
+    //todo: replace it and improve the method
     final File tempFile = File.createTempFile(xAppName + "-", ".zip");
 
     try (FileOutputStream fos = new FileOutputStream(tempFile)) {
