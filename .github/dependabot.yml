@@ -4,3 +4,5 @@ updates:
     directory: "/code" # Location of package manifests
     schedule:
       interval: "weekly"
+    assignees:
+      - "dependabot"
