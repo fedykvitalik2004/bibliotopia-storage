@@ -26,17 +26,6 @@
         <module>coverage</module>
     </modules>
 
-    <project>
-        <url>https://github.com/fedykvitalik2004/bibliotopia-storage</url>
-        <scm>
-            <url>https://github.com/fedykvitalik2004/bibliotopia-storage</url>
-        </scm>
-        <issueManagement>
-            <url>https://github.com/fedykvitalik2004/bibliotopia-storage/issues</url>
-        </issueManagement>
-    </project>
-
-
     <properties>
         <!--        Sonarqube properties-->
         <sonar.host.url>http://localhost:9000</sonar.host.url>
