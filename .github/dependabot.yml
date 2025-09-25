@@ -1,6 +1,27 @@
 version: 2
 updates:
-  - package-ecosystem: "maven" # See documentation for possible values
-    directory: "/code" # Location of package manifests
+  - package-ecosystem: "maven"
+    directory: "/code"
     schedule:
       interval: "weekly"
+    groups:
+      spring:
+        applies-to: all
+        patterns:
+          - "org.springframework*"
+          - "org.springframework.boot*"
+    labels:
+      - "spring"
+      - "dependencies"
+    commit-message:
+      prefix: "[maven][spring] "
+    
+
+  - package-ecosystem: "maven"
+    directory: "/code"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+    commit-message:
+      prefix: "[maven] "
