@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <entry key="exception.barcode.invalid_format">Invalid ISBN format {0}</entry>
+    <entry key="exception.barcode.general">An error occurred while generating the barcode</entry>
+
+    <entry key="exception.files_storage.upload_failed">File upload failed</entry>
+    <entry key="exception.files_storage.access_url_generation_failed">Failed to generate access URL</entry>
+    <entry key="exception.files_storage.storage_not_available">File storage service is not available</entry>
+    <entry key="exception.files_storage.file_not_null">File cannot be null</entry>
+    <entry key="exception.files_storage.file_not_empty">File content cannot be empty</entry>
+    <entry key="exception.files_storage.bucket_creation_failed">Failed to create bucket {0}</entry>
+    <entry key="exception.files_storage.bucket_existence_check_failed">Failed to check bucket existence {0}</entry>
+    <entry key="exception.files_storage.general">An error happened during storing</entry>
+
+    <entry key="exception.file_processing.failed_creating">Zip cannot be created</entry>
+    <entry key="exception.file_processing.failed_reading_bytes">Failed to read bytes from the file</entry>
+    <entry key="exception.file_processing.not_null_bucket_name">Bucket name cannot be null or empty</entry>
+    <entry key="exception.not_null_output_stream">Output stream cannot be null</entry>
+</properties>

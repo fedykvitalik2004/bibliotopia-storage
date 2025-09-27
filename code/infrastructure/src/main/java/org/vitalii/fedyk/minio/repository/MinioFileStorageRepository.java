@@ -73,29 +73,26 @@ public class MinioFileStorageRepository implements FileStorageRepository {
               PutObjectRequest.builder()
                       .bucket(location.bucketName())
                       .key(location.objectKey())
-                      .contentType(file.getContentType())
-                      .contentLength(file.getSize())
+                      .contentType(file.contentType())
+                      .contentLength(file.size())
                       .build(),
               RequestBody.fromInputStream(
-                      new ByteArrayInputStream(file.getContent()),
-                      file.getSize())
+                      new ByteArrayInputStream(file.content()),
+                      file.size())
       );
 
       if (!response.sdkHttpResponse().isSuccessful()) {
-        throw new FileStorageException("Upload failed with status: "
-                                       + response.sdkHttpResponse().statusCode());
+        log.info("Upload failed with status {}", response.sdkHttpResponse().statusCode());
+        throw new FileStorageException("exception.files_storage.upload_failed", null);
       }
 
       final String accessUrl = generateAccessUrl(location);
 
-      return new FileStorageResult(location, accessUrl, file.getSize(), file.getContentType());
+      return new FileStorageResult(location, accessUrl, file.size(), file.contentType());
 
-    } catch (S3Exception e) {
-      log.error("S3 error during file storage: {}", e.getMessage(), e);
-      throw new FileStorageException("S3 storage failed: " + e.awsErrorDetails().errorMessage(), e);
     } catch (Exception e) {
       log.error("Unexpected error during file storage: {}", e.getMessage(), e);
-      throw new FileStorageException("File storage failed", e);
+      throw new FileStorageException("exception.files_storage.general", null);
     }
   }
 
@@ -112,9 +109,8 @@ public class MinioFileStorageRepository implements FileStorageRepository {
       return s3Presigner.presignGetObject(request).url().toString();
 
     } catch (S3Exception e) {
-      log.error("Failed to generate presigned URL: {}", e.getMessage(), e);
-      throw new FileStorageException("Failed to generate access URL: "
-                                     + e.awsErrorDetails().errorMessage(), e);
+      log.error("Failed to generate presigned URL: {}", e.awsErrorDetails().errorMessage(), e);
+      throw new FileStorageException("exception.files_storage.access_url_generation_failed", null, e);
     }
   }
 
@@ -150,10 +146,10 @@ public class MinioFileStorageRepository implements FileStorageRepository {
       try {
         s3Client.createBucket(CreateBucketRequest.builder().bucket(bucketName).build());
       } catch (S3Exception s3Exception) {
-        throw new FileStorageException("Failed to create bucket: " + bucketName, s3Exception);
+        throw new FileStorageException("exception.files_storage.bucket_creation_failed", new Object[] {bucketName}, s3Exception);
       }
     } catch (S3Exception e) {
-      throw new FileStorageException("Failed to check bucket existence: " + bucketName, e);
+      throw new FileStorageException("exception.files_storage.bucket_existence_check_failed", new Object[] {bucketName}, e);
     }
   }
 

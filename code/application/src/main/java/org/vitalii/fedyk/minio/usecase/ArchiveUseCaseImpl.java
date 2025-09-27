@@ -11,6 +11,7 @@ import java.util.zip.ZipOutputStream;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.vitalii.fedyk.common.exception.LocalizedIllegalArgumentException;
 import org.vitalii.fedyk.minio.exception.FileProcessingException;
 import org.vitalii.fedyk.minio.repository.FileStorageRepository;
 
@@ -39,16 +40,16 @@ public class ArchiveUseCaseImpl implements ArchiveUseCase {
         processFile(bucketName, fileName, zipOutputStream);
       }
     } catch (IOException e) {
-      throw new FileProcessingException("Zip cannot be created", e);
+      throw new FileProcessingException("exception.file_processing.failed_creating", null);
     }
   }
 
   private void validateInputs(String bucketName, OutputStream outputStream) {
     if (bucketName == null) {
-      throw new IllegalArgumentException("Bucket name cannot be null or empty");
+      throw new LocalizedIllegalArgumentException("exception.file_processing.failed_creating", null);
     }
     if (outputStream == null) {
-      throw new IllegalArgumentException("Output stream cannot be null");
+      throw new LocalizedIllegalArgumentException("exception.not_null_output_stream", null);
     }
   }
 

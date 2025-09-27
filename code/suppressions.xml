@@ -15,4 +15,8 @@
     <suppress files=".model.*" checks="MissingJavadocType" />
     <suppress files=".infrastructure.*Mapper.java" checks="MissingJavadocType" />
     <suppress files=".infrastructure.*Entity.java" checks="MissingJavadocType" />
+    <suppress checks="MissingJavadocType" files="GlobalExceptionHandler\.java"/>
+    <suppress checks="MissingJavadocMethod" files="GlobalExceptionHandler\.java"/>
+    <suppress checks="MissingJavadocType" files="LocalizationConfig\.java"/>
+    <suppress checks="MissingJavadocMethod" files="LocalizationConfig\.java"/>
 </suppressions>

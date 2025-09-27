@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <entry key="exception.barcode.invalid_format">Некоректний ISBN формат {0}</entry>
+    <entry key="exception.barcode.general">Трапилася якась помилка під час генерації баркоду</entry>
+
+    <entry key="exception.files_storage.upload_failed">Не вдалося завантажити файл</entry>
+    <entry key="exception.files_storage.access_url_generation_failed">Не вдалося згенерувати URL доступу</entry>
+    <entry key="exception.files_storage.storage_not_available">Сервіс зберігання файлів недоступний</entry>
+    <entry key="exception.files_storage.file_not_null">Файл не може бути null</entry>
+    <entry key="exception.files_storage.file_not_empty">Контент файлу не може бути порожнім</entry>
+    <entry key="exception.files_storage.bucket_creation_failed">Не вдалося створити бакет {0}</entry>
+    <entry key="exception.files_storage.bucket_existence_check_failed">Не вдалося перевірити існування бакета {0}</entry>
+    <entry key="exception.files_storage.general">Сталася помилка під час збереження</entry>
+
+    <entry key="exception.file_processing.failed_creating">Не вдалося створити Zip</entry>
+    <entry key="exception.file_processing.failed_reading_bytes">Не вдалося зчитати байти з файлу</entry>
+    <entry key="exception.file_processing.not_null_bucket_name">Назва бакета не може бути порожньою або null</entry>
+    <entry key="exception.not_null_output_stream">Вихідний потік не може бути null</entry>
+</properties>

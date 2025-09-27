@@ -70,7 +70,7 @@ public class MinIoObjectInfoUseCaseImpl implements MinIoObjectInfoUseCase {
     try {
       fileBytes = file.getBytes();
     } catch (IOException e) {
-      throw new FileProcessingException("Failed to read bytes from the file.", e);
+      throw new FileProcessingException("exception.file_processing.failed_reading_bytes", null);
     }
     return fileBytes;
   }

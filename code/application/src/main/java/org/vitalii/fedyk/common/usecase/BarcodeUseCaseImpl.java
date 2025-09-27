@@ -31,10 +31,10 @@ public class BarcodeUseCaseImpl implements BarcodeUseCase {
       }
     } catch (WriterException exception) {
       log.error("Invalid ISBN format: {}", isbn, exception);
-      throw new BarcodeGenerationException("Invalid ISBN format: " + isbn, exception);
+      throw new BarcodeGenerationException("exception.barcode.invalid_format", new Object[] {isbn}, exception);
     } catch (Exception e) {
       log.error("Unexpected error generating barcode for ISBN: {}", isbn, e);
-      throw new BarcodeGenerationException("Unexpected error generating barcode", e);
+      throw new BarcodeGenerationException("exception.barcode.general", null, e);
     }
   }
 }
