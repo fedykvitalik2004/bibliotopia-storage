@@ -23,7 +23,8 @@ public class LocalizationConfig {
 
   @Bean
   public MessageSource messageSource() {
-    final ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+    final ReloadableResourceBundleMessageSource messageSource =
+        new ReloadableResourceBundleMessageSource();
     messageSource.setBasename("classpath:messages");
     messageSource.setDefaultEncoding("UTF-8");
     messageSource.setFallbackToSystemLocale(false);

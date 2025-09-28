@@ -6,9 +6,7 @@ import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilde
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-/**
- * Configures Jackson for the application.
- */
+/** Configures Jackson for the application. */
 @Configuration
 public class JacksonConfig {
 
@@ -19,9 +17,6 @@ public class JacksonConfig {
    */
   @Bean
   public Jackson2ObjectMapperBuilderCustomizer customizer() {
-    return builder -> builder
-            .timeZone(TimeZone.getTimeZone("UTC"))
-            .modules(new JavaTimeModule());
+    return builder -> builder.timeZone(TimeZone.getTimeZone("UTC")).modules(new JavaTimeModule());
   }
 }
-

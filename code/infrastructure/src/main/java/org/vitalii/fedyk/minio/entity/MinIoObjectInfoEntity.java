@@ -21,8 +21,8 @@ public class MinIoObjectInfoEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
+
   private String bucketName;
   private String objectName;
-  @CreationTimestamp
-  private OffsetDateTime createdAt;
+  @CreationTimestamp private OffsetDateTime createdAt;
 }

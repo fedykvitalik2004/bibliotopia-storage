@@ -6,11 +6,9 @@ import org.springframework.stereotype.Component;
 
 /**
  * Configuration properties for connecting to a MinIO server.
- * <p>
- * These properties are automatically bound from the application's
- * configuration (e.g., application.yml or application.properties)
- * using the prefix {@code minio}.
- * </p>
+ *
+ * <p>These properties are automatically bound from the application's configuration (e.g.,
+ * application.yml or application.properties) using the prefix {@code minio}.
  */
 @Component
 @ConfigurationProperties(prefix = "minio")

@@ -11,9 +11,7 @@ import org.springframework.stereotype.Service;
 import org.vitalii.fedyk.FileInfo;
 import org.vitalii.fedyk.common.exception.BarcodeGenerationException;
 
-/**
- * {@inheritDoc}
- */
+/** {@inheritDoc} */
 @Service
 @Slf4j
 public class BarcodeUseCaseImpl implements BarcodeUseCase {
@@ -22,8 +20,8 @@ public class BarcodeUseCaseImpl implements BarcodeUseCase {
   @Override
   public FileInfo generateImageBarcode(final String isbn) {
     try {
-      final BitMatrix bitMatrix = new MultiFormatWriter()
-              .encode(isbn, BarcodeFormat.EAN_13, 300, 100);
+      final BitMatrix bitMatrix =
+          new MultiFormatWriter().encode(isbn, BarcodeFormat.EAN_13, 300, 100);
 
       try (final ByteArrayOutputStream os = new ByteArrayOutputStream()) {
         MatrixToImageWriter.writeToStream(bitMatrix, extension, os);
@@ -31,7 +29,8 @@ public class BarcodeUseCaseImpl implements BarcodeUseCase {
       }
     } catch (WriterException exception) {
       log.error("Invalid ISBN format: {}", isbn, exception);
-      throw new BarcodeGenerationException("exception.barcode.invalid_format", new Object[] {isbn}, exception);
+      throw new BarcodeGenerationException(
+          "exception.barcode.invalid_format", new Object[] {isbn}, exception);
     } catch (Exception e) {
       log.error("Unexpected error generating barcode for ISBN: {}", isbn, e);
       throw new BarcodeGenerationException("exception.barcode.general", null, e);

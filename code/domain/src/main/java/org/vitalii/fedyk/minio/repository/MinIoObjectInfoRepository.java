@@ -4,9 +4,7 @@ import java.util.Optional;
 import java.util.UUID;
 import org.vitalii.fedyk.minio.model.MinIoObjectInfo;
 
-/**
- * Repository interface for managing {@link MinIoObjectInfo} domain objects.
- */
+/** Repository interface for managing {@link MinIoObjectInfo} domain objects. */
 public interface MinIoObjectInfoRepository {
   MinIoObjectInfo save(MinIoObjectInfo minIoObjectInfo);
 

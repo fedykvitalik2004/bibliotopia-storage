@@ -11,5 +11,6 @@ import org.vitalii.fedyk.minio.entity.MinIoObjectInfoEntity;
  */
 @Repository
 public interface MinIoObjectInfoJpaAdapter extends JpaRepository<MinIoObjectInfoEntity, UUID> {
-  Optional<MinIoObjectInfoEntity> findByBucketNameAndObjectName(String bucketName, String objectName);
+  Optional<MinIoObjectInfoEntity> findByBucketNameAndObjectName(
+      String bucketName, String objectName);
 }

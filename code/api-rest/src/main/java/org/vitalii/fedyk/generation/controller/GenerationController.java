@@ -8,9 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.vitalii.fedyk.generation.mapper.GenerateBarcodeMapper;
 import org.vitalii.fedyk.generation.usecase.GenerationProcessingUseCase;
 
-/**
- * REST controller responsible for handling generation requests.
- */
+/** REST controller responsible for handling generation requests. */
 @RestController
 @RequiredArgsConstructor
 public class GenerationController implements GenerationApi {

@@ -31,9 +31,7 @@ import software.amazon.awssdk.services.s3.model.S3Object;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
 
-/**
- * {@inheritDoc}
- */
+/** {@inheritDoc} */
 @Repository
 @Slf4j
 public class MinioFileStorageRepository implements FileStorageRepository {
@@ -43,25 +41,24 @@ public class MinioFileStorageRepository implements FileStorageRepository {
   private final HttpClient httpClient;
 
   /**
-   * Constructs a new {@code MinioFileStorageRepository} instance.
-   * This constructor initializes the AWS S3 client and presigner, the MinIO
-   * health check URL, and an HTTP client for health checks. The dependencies
-   * are injected by the Spring framework.
+   * Constructs a new {@code MinioFileStorageRepository} instance. This constructor initializes the
+   * AWS S3 client and presigner, the MinIO health check URL, and an HTTP client for health checks.
+   * The dependencies are injected by the Spring framework.
    *
-   * @param s3Client       The S3 client for performing low-level S3-compatible operations.
-   * @param s3Presigner    The S3 presigner used to generate secure pre-signed URLs for file access.
-   * @param healthCheckUrl The URL for the MinIO health check endpoint, provided via Spring's {@code @Value}.
+   * @param s3Client The S3 client for performing low-level S3-compatible operations.
+   * @param s3Presigner The S3 presigner used to generate secure pre-signed URLs for file access.
+   * @param healthCheckUrl The URL for the MinIO health check endpoint, provided via Spring's
+   *     {@code @Value}.
    */
   @Autowired
-  public MinioFileStorageRepository(S3Client s3Client,
-                                    S3Presigner s3Presigner,
-                                    @Value("#{ '${minio.endpoint}' + '/minio/health/live' }") String healthCheckUrl) {
+  public MinioFileStorageRepository(
+      S3Client s3Client,
+      S3Presigner s3Presigner,
+      @Value("#{ '${minio.endpoint}' + '/minio/health/live' }") String healthCheckUrl) {
     this.s3Client = s3Client;
     this.s3Presigner = s3Presigner;
     this.healthCheckUrl = healthCheckUrl;
-    this.httpClient = HttpClient.newBuilder()
-            .connectTimeout(Duration.ofSeconds(3))
-            .build();
+    this.httpClient = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(3)).build();
   }
 
   @Override
@@ -69,17 +66,15 @@ public class MinioFileStorageRepository implements FileStorageRepository {
     try {
       ensureBucketExists(location.bucketName());
 
-      final PutObjectResponse response = s3Client.putObject(
+      final PutObjectResponse response =
+          s3Client.putObject(
               PutObjectRequest.builder()
-                      .bucket(location.bucketName())
-                      .key(location.objectKey())
-                      .contentType(file.contentType())
-                      .contentLength(file.size())
-                      .build(),
-              RequestBody.fromInputStream(
-                      new ByteArrayInputStream(file.content()),
-                      file.size())
-      );
+                  .bucket(location.bucketName())
+                  .key(location.objectKey())
+                  .contentType(file.contentType())
+                  .contentLength(file.size())
+                  .build(),
+              RequestBody.fromInputStream(new ByteArrayInputStream(file.content()), file.size()));
 
       if (!response.sdkHttpResponse().isSuccessful()) {
         log.info("Upload failed with status {}", response.sdkHttpResponse().statusCode());
@@ -99,32 +94,33 @@ public class MinioFileStorageRepository implements FileStorageRepository {
   @Override
   public String generateAccessUrl(final StorageLocation location) {
     try {
-      GetObjectPresignRequest request = GetObjectPresignRequest.builder()
+      GetObjectPresignRequest request =
+          GetObjectPresignRequest.builder()
               .signatureDuration(Duration.ofDays(7))
-              .getObjectRequest(builder -> builder
-                      .bucket(location.bucketName())
-                      .key(location.objectKey()))
+              .getObjectRequest(
+                  builder -> builder.bucket(location.bucketName()).key(location.objectKey()))
               .build();
 
       return s3Presigner.presignGetObject(request).url().toString();
 
     } catch (S3Exception e) {
       log.error("Failed to generate presigned URL: {}", e.awsErrorDetails().errorMessage(), e);
-      throw new FileStorageException("exception.files_storage.access_url_generation_failed", null, e);
+      throw new FileStorageException(
+          "exception.files_storage.access_url_generation_failed", null, e);
     }
   }
 
   @Override
   public boolean isHealthy() {
     try {
-      HttpRequest request = HttpRequest.newBuilder()
+      HttpRequest request =
+          HttpRequest.newBuilder()
               .uri(URI.create(healthCheckUrl))
               .timeout(Duration.ofSeconds(4))
               .GET()
               .build();
 
-      HttpResponse<?> response = httpClient.send(request,
-              HttpResponse.BodyHandlers.discarding());
+      HttpResponse<?> response = httpClient.send(request, HttpResponse.BodyHandlers.discarding());
 
       boolean isHealthy = response.statusCode() == 200;
       if (!isHealthy) {
@@ -146,29 +142,27 @@ public class MinioFileStorageRepository implements FileStorageRepository {
       try {
         s3Client.createBucket(CreateBucketRequest.builder().bucket(bucketName).build());
       } catch (S3Exception s3Exception) {
-        throw new FileStorageException("exception.files_storage.bucket_creation_failed", new Object[] {bucketName}, s3Exception);
+        throw new FileStorageException(
+            "exception.files_storage.bucket_creation_failed",
+            new Object[] {bucketName},
+            s3Exception);
       }
     } catch (S3Exception e) {
-      throw new FileStorageException("exception.files_storage.bucket_existence_check_failed", new Object[] {bucketName}, e);
+      throw new FileStorageException(
+          "exception.files_storage.bucket_existence_check_failed", new Object[] {bucketName}, e);
     }
   }
 
   @Override
   public InputStream getObjectStream(final String bucketName, final String objectName) {
-    return s3Client.getObject(GetObjectRequest.builder()
-                    .bucket(bucketName)
-                    .key(objectName)
-            .build());
+    return s3Client.getObject(
+        GetObjectRequest.builder().bucket(bucketName).key(objectName).build());
   }
 
   @Override
   public List<String> getFileNames(final String bucketName) {
-    final ListObjectsV2Request request = ListObjectsV2Request.builder()
-            .bucket(bucketName)
-            .build();
+    final ListObjectsV2Request request = ListObjectsV2Request.builder().bucket(bucketName).build();
 
-    return s3Client.listObjectsV2Paginator(request).contents().stream()
-            .map(S3Object::key)
-            .toList();
+    return s3Client.listObjectsV2Paginator(request).contents().stream().map(S3Object::key).toList();
   }
 }

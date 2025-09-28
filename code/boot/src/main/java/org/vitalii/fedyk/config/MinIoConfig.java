@@ -13,9 +13,8 @@ import software.amazon.awssdk.services.s3.S3Configuration;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 
 /**
- * Configuration class for MinIO client and presigner beans.
- * Provides Spring-managed {@link S3Client} and {@link S3Presigner}
- * instances configured to connect to a local MinIO server.
+ * Configuration class for MinIO client and presigner beans. Provides Spring-managed {@link
+ * S3Client} and {@link S3Presigner} instances configured to connect to a local MinIO server.
  */
 @Configuration
 @AllArgsConstructor
@@ -30,19 +29,14 @@ public class MinIoConfig {
   @Bean
   public S3Client s3Client() {
     return S3Client.builder()
-            .endpointOverride(URI.create(minIoProperties.getEndpoint()))
-            .region(Region.US_EAST_1)
-            .credentialsProvider(
-                    StaticCredentialsProvider.create(
-                            AwsBasicCredentials.create(minIoProperties.getAccessKeyId(), minIoProperties.getSecretKey())
-                    )
-            )
-            .serviceConfiguration(
-                    S3Configuration.builder()
-                            .pathStyleAccessEnabled(true)
-                            .build()
-            )
-            .build();
+        .endpointOverride(URI.create(minIoProperties.getEndpoint()))
+        .region(Region.US_EAST_1)
+        .credentialsProvider(
+            StaticCredentialsProvider.create(
+                AwsBasicCredentials.create(
+                    minIoProperties.getAccessKeyId(), minIoProperties.getSecretKey())))
+        .serviceConfiguration(S3Configuration.builder().pathStyleAccessEnabled(true).build())
+        .build();
   }
 
   /**
@@ -53,18 +47,13 @@ public class MinIoConfig {
   @Bean
   public S3Presigner s3Presigner() {
     return S3Presigner.builder()
-            .endpointOverride(URI.create(minIoProperties.getEndpoint()))
-            .credentialsProvider(
-                    StaticCredentialsProvider.create(
-                            AwsBasicCredentials.create(minIoProperties.getAccessKeyId(), minIoProperties.getSecretKey())
-                    )
-            )
-            .region(Region.US_EAST_1)
-            .serviceConfiguration(
-                    S3Configuration.builder()
-                            .pathStyleAccessEnabled(true)
-                            .build()
-            )
-            .build();
+        .endpointOverride(URI.create(minIoProperties.getEndpoint()))
+        .credentialsProvider(
+            StaticCredentialsProvider.create(
+                AwsBasicCredentials.create(
+                    minIoProperties.getAccessKeyId(), minIoProperties.getSecretKey())))
+        .region(Region.US_EAST_1)
+        .serviceConfiguration(S3Configuration.builder().pathStyleAccessEnabled(true).build())
+        .build();
   }
 }

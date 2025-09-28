@@ -10,9 +10,7 @@ import org.vitalii.fedyk.minio.model.FileUpload;
 import org.vitalii.fedyk.minio.model.StorageLocation;
 import org.vitalii.fedyk.minio.repository.FileStorageRepository;
 
-/**
- {@inheritDoc}
- */
+/** {@inheritDoc} */
 @Service
 public class GenerationProcessingUseCaseImpl implements GenerationProcessingUseCase {
   private final BarcodeUseCase barcodeUseCase;
@@ -23,8 +21,8 @@ public class GenerationProcessingUseCaseImpl implements GenerationProcessingUseC
   private String barcodeBucket;
 
   @Autowired
-  public GenerationProcessingUseCaseImpl(final BarcodeUseCase barcodeUseCase,
-                                         final FileStorageRepository fileStorageRepository) {
+  public GenerationProcessingUseCaseImpl(
+      final BarcodeUseCase barcodeUseCase, final FileStorageRepository fileStorageRepository) {
     this.barcodeUseCase = barcodeUseCase;
     this.fileStorageRepository = fileStorageRepository;
   }
@@ -34,11 +32,12 @@ public class GenerationProcessingUseCaseImpl implements GenerationProcessingUseC
     final FileInfo generatedFileInfo = barcodeUseCase.generateImageBarcode(isbn);
 
     final StorageLocation storageLocation = new StorageLocation(barcodeBucket, isbn);
-    final FileUpload fileUpload = new FileUpload(isbn + "." +  generatedFileInfo.extension(),
+    final FileUpload fileUpload =
+        new FileUpload(
+            isbn + "." + generatedFileInfo.extension(),
             generatedFileInfo.content(),
             "image/" + generatedFileInfo.extension(),
-            generatedFileInfo.content().length
-    );
+            generatedFileInfo.content().length);
     final FileStorageResult saved = fileStorageRepository.store(storageLocation, fileUpload);
 
     return saved.accessUrl();

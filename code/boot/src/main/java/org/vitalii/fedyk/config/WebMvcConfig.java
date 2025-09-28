@@ -5,9 +5,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.vitalii.fedyk.minio.controller.LoggingInterceptor;
 
-/**
- * Configuration class for Spring MVC.
- */
+/** Configuration class for Spring MVC. */
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 

@@ -15,9 +15,7 @@ import org.vitalii.fedyk.common.exception.LocalizedIllegalArgumentException;
 import org.vitalii.fedyk.minio.exception.FileProcessingException;
 import org.vitalii.fedyk.minio.repository.FileStorageRepository;
 
-/**
- * {@inheritDoc}
- */
+/** {@inheritDoc} */
 @Service
 @Slf4j
 public class ArchiveUseCaseImpl implements ArchiveUseCase {
@@ -46,14 +44,16 @@ public class ArchiveUseCaseImpl implements ArchiveUseCase {
 
   private void validateInputs(String bucketName, OutputStream outputStream) {
     if (bucketName == null) {
-      throw new LocalizedIllegalArgumentException("exception.file_processing.failed_creating", null);
+      throw new LocalizedIllegalArgumentException(
+          "exception.file_processing.failed_creating", null);
     }
     if (outputStream == null) {
       throw new LocalizedIllegalArgumentException("exception.not_null_output_stream", null);
     }
   }
 
-  private void processFile(String bucketName, String fileName, ZipOutputStream zipOutputStream) throws IOException {
+  private void processFile(String bucketName, String fileName, ZipOutputStream zipOutputStream)
+      throws IOException {
     log.debug("Processing file '{}' from bucket '{}'", fileName, bucketName);
 
     final ZipEntry zipEntry = createZipEntry(fileName);

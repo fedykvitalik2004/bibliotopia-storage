@@ -8,9 +8,7 @@ import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
-/**
- * {@inheritDoc}
- */
+/** {@inheritDoc} */
 @Service
 @Slf4j
 public class FileProcessingUseCaseImpl implements FileProcessingUseCase {
@@ -19,9 +17,9 @@ public class FileProcessingUseCaseImpl implements FileProcessingUseCase {
   public byte[] compressImage(@NonNull final byte[] imageBytes) {
     try (final ByteArrayOutputStream os = new ByteArrayOutputStream()) {
       Thumbnails.of(new ByteArrayInputStream(imageBytes))
-              .scale(1.0)
-              .outputQuality(0.8)
-              .toOutputStream(os);
+          .scale(1.0)
+          .outputQuality(0.8)
+          .toOutputStream(os);
       return os.toByteArray();
     } catch (IOException e) {
       log.error("Image was not processed. Error occurred", e);

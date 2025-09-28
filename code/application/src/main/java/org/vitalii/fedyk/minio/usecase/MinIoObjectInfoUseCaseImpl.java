@@ -23,7 +23,10 @@ public class MinIoObjectInfoUseCaseImpl implements MinIoObjectInfoUseCase {
   private final FileProcessingUseCase fileProcessingUseCase;
 
   @Autowired
-  public MinIoObjectInfoUseCaseImpl(FileStorageUseCase fileStorageUseCase, MinIoObjectInfoRepository repository, FileProcessingUseCase fileProcessingUseCase) {
+  public MinIoObjectInfoUseCaseImpl(
+      FileStorageUseCase fileStorageUseCase,
+      MinIoObjectInfoRepository repository,
+      FileProcessingUseCase fileProcessingUseCase) {
     this.fileStorageUseCase = fileStorageUseCase;
     this.repository = repository;
     this.fileProcessingUseCase = fileProcessingUseCase;
@@ -40,10 +43,13 @@ public class MinIoObjectInfoUseCaseImpl implements MinIoObjectInfoUseCase {
       fileBytes = fileProcessingUseCase.compressImage(fileBytes);
     }
 
-    final FileUpload fileUpload = new FileUpload(fileName, fileBytes, contentType, fileBytes.length);
-    final FileStorageResult fileStorageResult = fileStorageUseCase.uploadFile(storageLocation, fileUpload);
+    final FileUpload fileUpload =
+        new FileUpload(fileName, fileBytes, contentType, fileBytes.length);
+    final FileStorageResult fileStorageResult =
+        fileStorageUseCase.uploadFile(storageLocation, fileUpload);
 
-    final MinIoObjectInfo toSave = MinIoObjectInfo.builder()
+    final MinIoObjectInfo toSave =
+        MinIoObjectInfo.builder()
             .bucketName(fileStorageResult.location().bucketName())
             .objectName(fileStorageResult.location().objectKey())
             .size(fileStorageResult.size())
@@ -56,13 +62,11 @@ public class MinIoObjectInfoUseCaseImpl implements MinIoObjectInfoUseCase {
 
   @Override
   public MinIoObjectInfo findById(final UUID id) {
-    final MinIoObjectInfo minIoObjectInfo = repository.findById(id)
-            .orElseThrow();
-    final StorageLocation storageLocation = new StorageLocation(minIoObjectInfo.getBucketName(), minIoObjectInfo.getObjectName());
+    final MinIoObjectInfo minIoObjectInfo = repository.findById(id).orElseThrow();
+    final StorageLocation storageLocation =
+        new StorageLocation(minIoObjectInfo.getBucketName(), minIoObjectInfo.getObjectName());
     final String url = fileStorageUseCase.getFileAccessUrl(storageLocation);
-    return minIoObjectInfo.toBuilder()
-            .url(url)
-            .build();
+    return minIoObjectInfo.toBuilder().url(url).build();
   }
 
   public byte[] getFileBytes(final MultipartFile file) {

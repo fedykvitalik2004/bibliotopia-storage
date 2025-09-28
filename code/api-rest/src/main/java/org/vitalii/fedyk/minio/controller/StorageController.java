@@ -21,8 +21,8 @@ import org.vitalii.fedyk.minio.usecase.ArchiveUseCase;
 import org.vitalii.fedyk.minio.usecase.MinIoObjectInfoUseCase;
 
 /**
- * REST controller that handles storage-related operations.
- * Implements {@link StorageApi} to provide endpoints for file upload.
+ * REST controller that handles storage-related operations. Implements {@link StorageApi} to provide
+ * endpoints for file upload.
  */
 @RestController
 @Slf4j
@@ -33,7 +33,8 @@ public class StorageController implements StorageApi {
 
   @Override
   @RequiredHeader("X-App-Name")
-  public ResponseEntity<FileUploadResponse> uploadFile(final MultipartFile file, final String xAppName) {
+  public ResponseEntity<FileUploadResponse> uploadFile(
+      final MultipartFile file, final String xAppName) {
     final MinIoObjectInfo saved = minIoObjectInfoUseCase.save(xAppName, file);
     return ResponseEntity.ok(mapper.toFileUploadResponse(saved));
   }
@@ -49,7 +50,7 @@ public class StorageController implements StorageApi {
   @Override
   @RequiredHeader("X-App-Name")
   public ResponseEntity<Resource> downloadZip(final String xAppName) {
-    //todo: replace it and improve the method
+    // todo: replace it and improve the method
     final File tempFile = File.createTempFile(xAppName + "-", ".zip");
 
     try (FileOutputStream fos = new FileOutputStream(tempFile)) {
@@ -59,10 +60,10 @@ public class StorageController implements StorageApi {
     final Resource resource = new FileSystemResource(tempFile);
 
     return ResponseEntity.ok()
-            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + xAppName + ".zip")
-            .contentType(MediaType.APPLICATION_OCTET_STREAM)
-            .contentLength(resource.contentLength())
-            .body(resource);
+        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + xAppName + ".zip")
+        .contentType(MediaType.APPLICATION_OCTET_STREAM)
+        .contentLength(resource.contentLength())
+        .body(resource);
   }
 
   @Autowired

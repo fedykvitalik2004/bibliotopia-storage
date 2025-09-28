@@ -18,15 +18,16 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(LocalizedException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
-  public ErrorResponse handleLocalizedException(final LocalizedException localizedException, final Locale locale) {
-    final String localizedMessage = resolveMessage(localizedException.getMessage(), localizedException.getMessageArguments(), locale);
-    return ErrorResponse.builder()
-            .message(localizedMessage)
-            .locale(locale)
-            .build();
+  public ErrorResponse handleLocalizedException(
+      final LocalizedException localizedException, final Locale locale) {
+    final String localizedMessage =
+        resolveMessage(
+            localizedException.getMessage(), localizedException.getMessageArguments(), locale);
+    return ErrorResponse.builder().message(localizedMessage).locale(locale).build();
   }
 
-  private String resolveMessage(final String message, final Object[] messageArguments, final Locale locale) {
+  private String resolveMessage(
+      final String message, final Object[] messageArguments, final Locale locale) {
     return messageSource.getMessage(message, messageArguments, locale);
   }
 

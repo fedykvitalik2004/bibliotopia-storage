@@ -10,9 +10,7 @@ import org.vitalii.fedyk.minio.model.FileUpload;
 import org.vitalii.fedyk.minio.model.StorageLocation;
 import org.vitalii.fedyk.minio.repository.FileStorageRepository;
 
-/**
- * {@inheritDoc}
- */
+/** {@inheritDoc} */
 @Service
 @AllArgsConstructor
 @Slf4j
@@ -22,38 +20,55 @@ public class FileStorageUseCaseImpl implements FileStorageUseCase {
 
   @Override
   public FileStorageResult uploadFile(StorageLocation location, FileUpload file) {
-    log.info("Starting file upload for object '{}' in bucket '{}'",
-            location.objectKey(), location.bucketName());
+    log.info(
+        "Starting file upload for object '{}' in bucket '{}'",
+        location.objectKey(),
+        location.bucketName());
 
     validateServiceAvailability();
     validateFile(file);
 
     try {
       final FileStorageResult result = repository.store(location, file);
-      log.info("Successfully uploaded file '{}' to bucket '{}'",
-              location.objectKey(), location.bucketName());
+      log.info(
+          "Successfully uploaded file '{}' to bucket '{}'",
+          location.objectKey(),
+          location.bucketName());
       return result;
     } catch (Exception e) {
-      log.error("Failed to upload file '{}' to bucket '{}': {}",
-              location.objectKey(), location.bucketName(), e.getMessage(), e);
+      log.error(
+          "Failed to upload file '{}' to bucket '{}': {}",
+          location.objectKey(),
+          location.bucketName(),
+          e.getMessage(),
+          e);
       throw new FileStorageException("exception.files_storage.upload_failed", null, e);
     }
   }
 
   @Override
   public String getFileAccessUrl(StorageLocation location) {
-    log.info("Generating access URL for object '{}' in bucket '{}'",
-            location.objectKey(), location.bucketName());
+    log.info(
+        "Generating access URL for object '{}' in bucket '{}'",
+        location.objectKey(),
+        location.bucketName());
 
     try {
       String url = repository.generateAccessUrl(location);
-      log.info("Successfully generated access URL for object '{}' in bucket '{}'",
-              location.objectKey(), location.bucketName());
+      log.info(
+          "Successfully generated access URL for object '{}' in bucket '{}'",
+          location.objectKey(),
+          location.bucketName());
       return url;
     } catch (Exception e) {
-      log.error("Failed to generate URL for object '{}' in bucket '{}': {}",
-              location.objectKey(), location.bucketName(), e.getMessage(), e);
-      throw new FileStorageException("exception.files_storage.access_url_generation_failed", null, e);
+      log.error(
+          "Failed to generate URL for object '{}' in bucket '{}': {}",
+          location.objectKey(),
+          location.bucketName(),
+          e.getMessage(),
+          e);
+      throw new FileStorageException(
+          "exception.files_storage.access_url_generation_failed", null, e);
     }
   }
 
