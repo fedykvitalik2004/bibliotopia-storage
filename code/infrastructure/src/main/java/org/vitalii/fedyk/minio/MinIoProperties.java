@@ -17,4 +17,6 @@ public class MinIoProperties {
   private String accessKeyId;
   private String secretKey;
   private String endpoint;
+  private String urlInternal;
+  private String urlExternal;
 }

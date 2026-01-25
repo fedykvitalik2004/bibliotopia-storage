@@ -29,7 +29,7 @@ public class MinIoConfig {
   @Bean
   public S3Client s3Client() {
     return S3Client.builder()
-        .endpointOverride(URI.create(minIoProperties.getEndpoint()))
+        .endpointOverride(URI.create(minIoProperties.getUrlInternal()))
         .region(Region.US_EAST_1)
         .credentialsProvider(
             StaticCredentialsProvider.create(
@@ -47,7 +47,7 @@ public class MinIoConfig {
   @Bean
   public S3Presigner s3Presigner() {
     return S3Presigner.builder()
-        .endpointOverride(URI.create(minIoProperties.getEndpoint()))
+        .endpointOverride(URI.create(minIoProperties.getUrlExternal()))
         .credentialsProvider(
             StaticCredentialsProvider.create(
                 AwsBasicCredentials.create(

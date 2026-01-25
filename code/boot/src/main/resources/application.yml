@@ -4,11 +4,10 @@ spring:
   jackson:
     time-zone: UTC
   datasource:
-    url: jdbc:postgresql://localhost:5434/mydb
-    username: myuser
-    password: mypassword
+    url: jdbc:postgresql://${DB_URL}/${DB_NAME}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
-
   jpa:
     hibernate:
       ddl-auto: update
@@ -18,8 +17,10 @@ spring:
           time_zone: UTC
         dialect: org.hibernate.dialect.PostgreSQLDialect
 minio:
-  access-key-id: admin
-  secret-key: password
-  endpoint: http://localhost:9090
+  access-key-id: ${MINIO_USER}
+  secret-key: ${MINIO_PASSWORD}
   barcode-bucket: barcodes
-
+  url-internal: ${MINIO_URL_INTERNAL}
+  url-external: ${MINIO_URL_EXTERNAL}
+springdoc:
+  allowed-locales: uk-UA,en-GB,he-IL

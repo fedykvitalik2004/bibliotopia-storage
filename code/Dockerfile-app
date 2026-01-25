@@ -1,10 +1,10 @@
-FROM maven:3.9 AS build
+FROM maven:3.9.3-eclipse-temurin-17 AS BUILD
 WORKDIR /app
 COPY . .
-RUN mvn -B clean package -DSkipTests
+RUN mvn -B clean package -DskipTests
 
-FROM openjdk:17 AS run
+FROM openjdk:17.0.2-jdk AS RUN
 WORKDIR /app
-COPY --from=build /app/boot/target/boot-*.jar app.jar
-ENTRYPOINT ["java", "-jar", "app.jar"]
+COPY --from=BUILD /app .
+ENTRYPOINT sh -c 'java -jar boot/target/*.jar'
 EXPOSE 8080

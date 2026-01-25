@@ -1,0 +1,28 @@
+# IntelliJ IDEA
+.idea
+*.iml
+
+# Maven / Java build artifacts
+target/
+*.class
+*.jar
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Git
+.git
+.gitignore
+
+# Docker
+.dockerignore
+Dockerfile*
+.env
+
+# Node / frontend if any
+node_modules
+dist
+build

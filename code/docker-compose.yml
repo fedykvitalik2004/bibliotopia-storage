@@ -3,50 +3,70 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-app
+    container_name: bibliotopia_storage
     ports:
-      - "8090:8080"
+      - "8080:8080"
+    environment:
+      DB_URL: app_db
+      DB_NAME: ${APP_DB_NAME}
+      DB_USER: ${APP_DB_USER}
+      DB_PASSWORD: ${APP_DB_PASSWORD}
+      MINIO_USER: ${MINIO_USER}
+      MINIO_PASSWORD: ${MINIO_PASSWORD}
+      MINIO_URL_INTERNAL: http://minio:9000
+      MINIO_URL_EXTERNAL: ${MINIO_URL_EXTERNAL}
+    depends_on:
+      app_db:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
   app_db:
     image: postgres:17
     container_name: postgres_db
     environment:
-      POSTGRES_USER: myuser
-      POSTGRES_PASSWORD: mypassword
-      POSTGRES_DB: mydb
+      POSTGRES_USER: ${APP_DB_USER}
+      POSTGRES_PASSWORD: ${APP_DB_PASSWORD}
+      POSTGRES_DB: ${APP_DB_NAME}
       TZ: UTC
     ports:
-      - "5434:5432"
+      - "5432:5432"
+    volumes:
+      - app_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${APP_DB_USER} -d ${APP_DB_NAME}" ]
+      interval: 5s
+      retries: 5
+      timeout: 5s
   sonar_db:
-    image: postgres:16
+    image: postgres:17
     container_name: sonar_db
     environment:
-      POSTGRES_USER: sonaruser
-      POSTGRES_PASSWORD: sonarpwd
-      POSTGRES_DB: sonar
+      POSTGRES_USER: ${SONAR_DB_USER}
+      POSTGRES_PASSWORD: ${SONAR_DB_PASSWORD}
+      POSTGRES_DB: ${SONAR_DB_NAME}
     volumes:
       - sonar_db_data:/var/lib/postgresql/data
-    restart: unless-stopped
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U sonaruser -d sonar" ]
-      interval: 10s
+      test: [ "CMD-SHELL", "pg_isready -U ${SONAR_DB_USER} -d ${SONAR_DB_NAME}" ]
+      interval: 5s
       retries: 5
       timeout: 5s
   sonarqube:
     image: sonarqube:24.12.0.100206-community
     container_name: sonarqube
     environment:
-      SONAR_JDBC_URL: jdbc:postgresql://sonar_db:5432/sonar
-      SONAR_JDBC_USERNAME: sonaruser
-      SONAR_JDBC_PASSWORD: sonarpwd
-    depends_on:
-      sonar_db:
-        condition: service_healthy
+      SONAR_JDBC_URL: jdbc:postgresql://sonar_db/${SONAR_DB_NAME}
+      SONAR_JDBC_USERNAME: ${SONAR_DB_USER}
+      SONAR_JDBC_PASSWORD: ${SONAR_DB_PASSWORD}
     ports:
-      - "9001:9000"
-    restart: unless-stopped
+      - "9000:9000"
     volumes:
       - sonarqube_data:/opt/sonarqube/data
       - sonarqube_extensions:/opt/sonarqube/extensions
       - sonarqube_logs:/opt/sonarqube/logs
+    depends_on:
+      sonar_db:
+        condition: service_healthy
   minio:
     image: minio/minio:latest
     container_name: minio
@@ -54,12 +74,18 @@ services:
       - "9090:9000"
       - "9091:9001"
     environment:
-      MINIO_ROOT_USER: admin
-      MINIO_ROOT_PASSWORD: password
-    command: server /data --console-address ":9001"
+      MINIO_ROOT_USER: ${MINIO_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_PASSWORD}
     volumes:
       - minio_data:/data
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      retries: 5
+      timeout: 5s
 volumes:
+  app_db_data:
   sonar_db_data:
   sonarqube_data:
   sonarqube_extensions:
