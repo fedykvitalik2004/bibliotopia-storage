@@ -13,7 +13,7 @@ public class JpegCompressorAdapter implements ImageCompressorPort {
   @Override
   public byte[] compress(InputStream inputStream) throws IOException {
     try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
-      Thumbnails.of(inputStream).scale(1.0).outputQuality(0.9).toOutputStream(os);
+      Thumbnails.of(inputStream).scale(1.0).outputQuality(0.8).toOutputStream(os);
       return os.toByteArray();
     }
   }
