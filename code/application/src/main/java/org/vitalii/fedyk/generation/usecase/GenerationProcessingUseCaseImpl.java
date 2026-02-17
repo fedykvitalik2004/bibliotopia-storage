@@ -3,43 +3,41 @@ package org.vitalii.fedyk.generation.usecase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.vitalii.fedyk.FileInfo;
 import org.vitalii.fedyk.common.usecase.BarcodeUseCase;
-import org.vitalii.fedyk.minio.model.FileStorageResult;
-import org.vitalii.fedyk.minio.model.FileUpload;
-import org.vitalii.fedyk.minio.model.StorageLocation;
-import org.vitalii.fedyk.minio.repository.FileStorageRepository;
+import org.vitalii.fedyk.generation.model.FileInfo;
+import org.vitalii.fedyk.minio.model.MinIoSaveRequest;
+import org.vitalii.fedyk.minio.model.StorageInfo;
+import org.vitalii.fedyk.minio.usecase.MinIoObjectInfoUseCase;
 
 /** {@inheritDoc} */
 @Service
 public class GenerationProcessingUseCaseImpl implements GenerationProcessingUseCase {
   private final BarcodeUseCase barcodeUseCase;
 
-  private final FileStorageRepository fileStorageRepository;
+  private final MinIoObjectInfoUseCase minIoObjectInfoUseCase;
 
   @Value("${minio.barcode-bucket}")
   private String barcodeBucket;
 
   @Autowired
   public GenerationProcessingUseCaseImpl(
-      final BarcodeUseCase barcodeUseCase, final FileStorageRepository fileStorageRepository) {
+      final BarcodeUseCase barcodeUseCase, final MinIoObjectInfoUseCase minIoObjectInfoUseCase) {
     this.barcodeUseCase = barcodeUseCase;
-    this.fileStorageRepository = fileStorageRepository;
+    this.minIoObjectInfoUseCase = minIoObjectInfoUseCase;
   }
 
   @Override
   public String generateBarcodeAndReturnUrl(final String isbn) {
-    final FileInfo generatedFileInfo = barcodeUseCase.generateImageBarcode(isbn);
+    final FileInfo generatedFileInfo = this.barcodeUseCase.generateImageBarcode(isbn);
 
-    final StorageLocation storageLocation = new StorageLocation(barcodeBucket, isbn);
-    final FileUpload fileUpload =
-        new FileUpload(
+    final MinIoSaveRequest minIoSaveRequest =
+        new MinIoSaveRequest(
             isbn + "." + generatedFileInfo.extension(),
-            generatedFileInfo.content(),
             "image/" + generatedFileInfo.extension(),
-            generatedFileInfo.content().length);
-    final FileStorageResult saved = fileStorageRepository.store(storageLocation, fileUpload);
+            generatedFileInfo.length(),
+            generatedFileInfo.content());
+    final StorageInfo saved = this.minIoObjectInfoUseCase.save(barcodeBucket, minIoSaveRequest);
 
-    return saved.accessUrl();
+    return saved.getUrl();
   }
 }

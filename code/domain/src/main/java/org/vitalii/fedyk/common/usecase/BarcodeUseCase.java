@@ -1,6 +1,6 @@
 package org.vitalii.fedyk.common.usecase;
 
-import org.vitalii.fedyk.FileInfo;
+import org.vitalii.fedyk.generation.model.FileInfo;
 
 /** Use case for generating barcode images from ISBN codes. */
 public interface BarcodeUseCase {
