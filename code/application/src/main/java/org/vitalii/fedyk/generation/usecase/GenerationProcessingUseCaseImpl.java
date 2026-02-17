@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.vitalii.fedyk.common.usecase.BarcodeUseCase;
 import org.vitalii.fedyk.generation.model.FileInfo;
-import org.vitalii.fedyk.minio.model.MinIoSaveRequest;
+import org.vitalii.fedyk.minio.model.FileUpload;
 import org.vitalii.fedyk.minio.model.StorageInfo;
 import org.vitalii.fedyk.minio.usecase.MinIoObjectInfoUseCase;
 
@@ -30,13 +30,13 @@ public class GenerationProcessingUseCaseImpl implements GenerationProcessingUseC
   public String generateBarcodeAndReturnUrl(final String isbn) {
     final FileInfo generatedFileInfo = this.barcodeUseCase.generateImageBarcode(isbn);
 
-    final MinIoSaveRequest minIoSaveRequest =
-        new MinIoSaveRequest(
+    final FileUpload fileUpload =
+        new FileUpload(
             isbn + "." + generatedFileInfo.extension(),
+                generatedFileInfo.content(),
             "image/" + generatedFileInfo.extension(),
-            generatedFileInfo.length(),
-            generatedFileInfo.content());
-    final StorageInfo saved = this.minIoObjectInfoUseCase.save(barcodeBucket, minIoSaveRequest);
+            generatedFileInfo.length());
+    final StorageInfo saved = this.minIoObjectInfoUseCase.save(barcodeBucket, fileUpload);
 
     return saved.getUrl();
   }
