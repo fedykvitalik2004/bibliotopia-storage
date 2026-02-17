@@ -15,7 +15,7 @@ import org.vitalii.fedyk.generation.model.FileInfo;
 /** {@inheritDoc} */
 @Service
 @Slf4j
-public class BarcodeUseCaseImpl implements BarcodeUseCase {
+public class GenerateBarcodeUseCaseImpl implements GenerateBarcodeUseCase {
   private static final String EXTENSION = "png";
 
   @Override

@@ -3,32 +3,33 @@ package org.vitalii.fedyk.generation.usecase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.vitalii.fedyk.common.usecase.BarcodeUseCase;
+import org.vitalii.fedyk.common.usecase.GenerateBarcodeUseCase;
 import org.vitalii.fedyk.generation.model.FileInfo;
 import org.vitalii.fedyk.minio.model.FileUpload;
 import org.vitalii.fedyk.minio.model.StorageInfo;
-import org.vitalii.fedyk.minio.usecase.MinIoObjectInfoUseCase;
+import org.vitalii.fedyk.minio.usecase.FileManagementService;
 
 /** {@inheritDoc} */
 @Service
-public class GenerationProcessingUseCaseImpl implements GenerationProcessingUseCase {
-  private final BarcodeUseCase barcodeUseCase;
+public class GenerateAndStoreBarcodeUseCaseImpl implements GenerateAndStoreBarcodeUseCase {
+  private final GenerateBarcodeUseCase generateBarcodeUseCase;
 
-  private final MinIoObjectInfoUseCase minIoObjectInfoUseCase;
+  private final FileManagementService fileManagementService;
 
   @Value("${minio.barcode-bucket}")
   private String barcodeBucket;
 
   @Autowired
-  public GenerationProcessingUseCaseImpl(
-      final BarcodeUseCase barcodeUseCase, final MinIoObjectInfoUseCase minIoObjectInfoUseCase) {
-    this.barcodeUseCase = barcodeUseCase;
-    this.minIoObjectInfoUseCase = minIoObjectInfoUseCase;
+  public GenerateAndStoreBarcodeUseCaseImpl(
+      final GenerateBarcodeUseCase generateBarcodeUseCase,
+      final FileManagementService fileManagementService) {
+    this.generateBarcodeUseCase = generateBarcodeUseCase;
+    this.fileManagementService = fileManagementService;
   }
 
   @Override
   public String generateBarcodeAndReturnUrl(final String isbn) {
-    final FileInfo generatedFileInfo = this.barcodeUseCase.generateImageBarcode(isbn);
+    final FileInfo generatedFileInfo = this.generateBarcodeUseCase.generateImageBarcode(isbn);
 
     final FileUpload fileUpload =
         new FileUpload(
@@ -36,7 +37,7 @@ public class GenerationProcessingUseCaseImpl implements GenerationProcessingUseC
             generatedFileInfo.content(),
             "image/" + generatedFileInfo.extension(),
             generatedFileInfo.length());
-    final StorageInfo saved = this.minIoObjectInfoUseCase.save(barcodeBucket, fileUpload);
+    final StorageInfo saved = this.fileManagementService.save(barcodeBucket, fileUpload);
 
     return saved.getUrl();
   }
