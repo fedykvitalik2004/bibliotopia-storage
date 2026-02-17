@@ -33,7 +33,7 @@ public class GenerationProcessingUseCaseImpl implements GenerationProcessingUseC
     final FileUpload fileUpload =
         new FileUpload(
             isbn + "." + generatedFileInfo.extension(),
-                generatedFileInfo.content(),
+            generatedFileInfo.content(),
             "image/" + generatedFileInfo.extension(),
             generatedFileInfo.length());
     final StorageInfo saved = this.minIoObjectInfoUseCase.save(barcodeBucket, fileUpload);
