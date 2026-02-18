@@ -45,7 +45,8 @@ public class ArchiveUseCaseImpl implements ArchiveUseCase {
             .map(StorageInfo::getObjectName)
             .toList();
 
-    try (final BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream);
+    try (final BufferedOutputStream bufferedOutputStream =
+            new BufferedOutputStream(outputStream, 64 * 1024);
         final ZipOutputStream zipOutputStream = createZipOutputStream(bufferedOutputStream)) {
       for (final String fileName : fileNames) {
         processFile(bucketName, fileName, zipOutputStream);
@@ -62,11 +63,19 @@ public class ArchiveUseCaseImpl implements ArchiveUseCase {
     final ZipEntry zipEntry = this.createZipEntry(fileName);
 
     try (final InputStream inputStream =
-            this.fileStorageRepository.getObjectStream(bucketName, fileName);
+            this.fileStorageRepository.getObjectStream(bucketName, fileName); // todo: Heavy.
         final BufferedInputStream bufferedInputStream =
             new BufferedInputStream(inputStream, 64 * 1024)) {
       zipOutputStream.putNextEntry(zipEntry);
-      bufferedInputStream.transferTo(zipOutputStream);
+
+      byte[] buffer = new byte[16 * 1024];
+      int bytesRead;
+
+      while ((bytesRead = bufferedInputStream.read(buffer)) != -1) {
+        zipOutputStream.write(buffer, 0, bytesRead);
+      }
+
+      zipOutputStream.closeEntry();
 
       log.debug("Successfully processed file '{}'", fileName);
     }

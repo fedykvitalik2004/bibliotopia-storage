@@ -17,6 +17,7 @@ public class PngCompressorAdapter implements ImageCompressorPort {
 
   @Override
   public byte[] compress(final InputStream inputStream) throws IOException {
+    // Lossless compression.
     try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
       final BufferedImage image = ImageIO.read(inputStream);
       final ImageWriter writer = ImageIO.getImageWritersByFormatName("png").next();
