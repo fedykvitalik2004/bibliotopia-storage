@@ -116,6 +116,11 @@
                 <version>${google.zxing.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.github.depsypher</groupId>
+                <artifactId>pngtastic</artifactId>
+                <version>1.8</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -145,14 +150,6 @@
                             <version>1.6.3</version>
                         </path>
                     </annotationProcessorPaths>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <mainClass>org.vitalii.fedyk.BootApplication</mainClass>
-                    <skip>true</skip>
                 </configuration>
             </plugin>
             <plugin>

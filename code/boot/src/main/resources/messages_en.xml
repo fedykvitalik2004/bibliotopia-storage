@@ -5,13 +5,17 @@
     <entry key="exception.barcode.general">An error occurred while generating the barcode</entry>
 
     <entry key="exception.files_storage.upload_failed">File upload failed</entry>
-    <entry key="exception.files_storage.access_url_generation_failed">Failed to generate access URL</entry>
+    <entry key="exception.files_storage.access_url_generation_failed">Failed to generate an access URL</entry>
     <entry key="exception.files_storage.storage_not_available">File storage service is not available</entry>
     <entry key="exception.files_storage.file_not_null">File cannot be null</entry>
     <entry key="exception.files_storage.file_not_empty">File content cannot be empty</entry>
-    <entry key="exception.files_storage.bucket_creation_failed">Failed to create bucket {0}</entry>
-    <entry key="exception.files_storage.bucket_existence_check_failed">Failed to check bucket existence {0}</entry>
+    <entry key="exception.files_storage.bucket_creation_failed">Failed to create a bucket '{0}'</entry>
+    <entry key="exception.files_storage.bucket_existence_check_failed">Failed to check bucket existence '{0}'</entry>
     <entry key="exception.files_storage.general">An error happened during storing</entry>
+    <entry key="exception.files_storage.retrieve_failed">Could not retrieve object '{0}' from bucket '{1}'</entry>
+    <entry key="exception.files_storage.upload_part_failed">Could not upload part {0} of file '{1}' to bucket '{2}'</entry>
+    <entry key="exception.files_storage.create_multipart_failed">Could not initiate multipart upload for file '{0}' in bucket '{1}'</entry>
+    <entry key="exception.files_storage.complete_multipart_failed">Could not complete multipart upload for file '{0}' in bucket '{1}' (uploadId: {2})</entry>
 
     <entry key="exception.file_processing.failed_creating">Zip cannot be created</entry>
     <entry key="exception.file_processing.failed_reading_bytes">Failed to read bytes from the file</entry>

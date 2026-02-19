@@ -1,19 +1,23 @@
 package org.vitalii.fedyk.minio.usecase;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.vitalii.fedyk.common.exception.LocalizedIllegalArgumentException;
 import org.vitalii.fedyk.minio.exception.FileProcessingException;
+import org.vitalii.fedyk.minio.model.StorageInfo;
 import org.vitalii.fedyk.minio.repository.FileStorageRepository;
+import org.vitalii.fedyk.minio.repository.StorageInfoRepository;
 
 /** {@inheritDoc} */
 @Service
@@ -21,20 +25,30 @@ import org.vitalii.fedyk.minio.repository.FileStorageRepository;
 public class ArchiveUseCaseImpl implements ArchiveUseCase {
   private final FileStorageRepository fileStorageRepository;
 
+  private final StorageInfoRepository storageInfoRepository;
+
   @Autowired
-  public ArchiveUseCaseImpl(final FileStorageRepository fileStorageRepository) {
+  public ArchiveUseCaseImpl(
+      FileStorageRepository fileStorageRepository, StorageInfoRepository storageInfoRepository) {
     this.fileStorageRepository = fileStorageRepository;
+    this.storageInfoRepository = storageInfoRepository;
   }
 
   @Override
-  public void streamBucketAsStream(String bucketName, OutputStream outputStream) {
-    validateInputs(bucketName, outputStream);
+  public void streamFilesFromBucket(
+      final String bucketName, final List<UUID> storageInfoIds, final OutputStream outputStream) {
+    final List<String> fileNames =
+        storageInfoIds.stream()
+            .map(id -> this.storageInfoRepository.findById(id).orElse(null))
+            .filter(Objects::nonNull)
+            .filter(StorageInfo::isComplete)
+            .map(StorageInfo::getObjectName)
+            .toList();
 
-    try (final ZipOutputStream zipOutputStream = createZipOutputStream(outputStream)) {
-      final List<String> fileNames = fileStorageRepository.getFileNames(bucketName);
-      final Iterator<String> fileNameIterator = fileNames.iterator();
-      while (fileNameIterator.hasNext()) {
-        final String fileName = fileNameIterator.next();
+    try (final BufferedOutputStream bufferedOutputStream =
+            new BufferedOutputStream(outputStream, 64 * 1024);
+        final ZipOutputStream zipOutputStream = createZipOutputStream(bufferedOutputStream)) {
+      for (final String fileName : fileNames) {
         processFile(bucketName, fileName, zipOutputStream);
       }
     } catch (IOException e) {
@@ -42,25 +56,25 @@ public class ArchiveUseCaseImpl implements ArchiveUseCase {
     }
   }
 
-  private void validateInputs(String bucketName, OutputStream outputStream) {
-    if (bucketName == null) {
-      throw new LocalizedIllegalArgumentException(
-          "exception.file_processing.failed_creating", null);
-    }
-    if (outputStream == null) {
-      throw new LocalizedIllegalArgumentException("exception.not_null_output_stream", null);
-    }
-  }
-
   private void processFile(String bucketName, String fileName, ZipOutputStream zipOutputStream)
       throws IOException {
     log.debug("Processing file '{}' from bucket '{}'", fileName, bucketName);
 
-    final ZipEntry zipEntry = createZipEntry(fileName);
+    final ZipEntry zipEntry = this.createZipEntry(fileName);
 
-    try (InputStream inputStream = fileStorageRepository.getObjectStream(bucketName, fileName)) {
+    try (final InputStream inputStream =
+            this.fileStorageRepository.getObjectStream(bucketName, fileName); // todo: Heavy.
+        final BufferedInputStream bufferedInputStream =
+            new BufferedInputStream(inputStream, 64 * 1024)) {
       zipOutputStream.putNextEntry(zipEntry);
-      inputStream.transferTo(zipOutputStream);
+
+      byte[] buffer = new byte[16 * 1024];
+      int bytesRead;
+
+      while ((bytesRead = bufferedInputStream.read(buffer)) != -1) {
+        zipOutputStream.write(buffer, 0, bytesRead);
+      }
+
       zipOutputStream.closeEntry();
 
       log.debug("Successfully processed file '{}'", fileName);
@@ -69,7 +83,7 @@ public class ArchiveUseCaseImpl implements ArchiveUseCase {
 
   private ZipEntry createZipEntry(String fileName) {
     final ZipEntry zipEntry = new ZipEntry(fileName);
-    zipEntry.setTime(System.currentTimeMillis());
+    zipEntry.setTime(System.currentTimeMillis()); // todo: improve time write
     return zipEntry;
   }
 

@@ -9,9 +9,13 @@
     <entry key="exception.files_storage.storage_not_available">Сервіс зберігання файлів недоступний</entry>
     <entry key="exception.files_storage.file_not_null">Файл не може бути null</entry>
     <entry key="exception.files_storage.file_not_empty">Контент файлу не може бути порожнім</entry>
-    <entry key="exception.files_storage.bucket_creation_failed">Не вдалося створити бакет {0}</entry>
-    <entry key="exception.files_storage.bucket_existence_check_failed">Не вдалося перевірити існування бакета {0}</entry>
+    <entry key="exception.files_storage.bucket_creation_failed">Не вдалося створити бакет '{0}'</entry>
+    <entry key="exception.files_storage.bucket_existence_check_failed">Не вдалося перевірити існування бакета '{0}'</entry>
     <entry key="exception.files_storage.general">Сталася помилка під час збереження</entry>
+    <entry key="exception.files_storage.retrieve_failed">Не вдалося отримати об’єкт '{0}' з бакету '{1}'</entry>
+    <entry key="exception.files_storage.upload_part_failed">Не вдалося завантажити частину {0} файлу '{1}' у бакет '{2}'</entry>
+    <entry key="exception.files_storage.create_multipart_failed">Не вдалося ініціювати завантаження файлу '{0}' у бакет '{1}'</entry>
+    <entry key="exception.files_storage.complete_multipart_failed">Не вдалося завершити багаточастинне завантаження файлу '{0}' у бакет '{1}' (uploadId: {2})</entry>
 
     <entry key="exception.file_processing.failed_creating">Не вдалося створити Zip</entry>
     <entry key="exception.file_processing.failed_reading_bytes">Не вдалося зчитати байти з файлу</entry>
