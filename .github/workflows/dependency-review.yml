@@ -17,49 +17,47 @@ jobs:
         with:
           comment-summary-in-pr: always
           fail-on-severity: moderate       
-      - name: Show all outputs safely
-        env:
-          COMMENT_CONTENT: ${{ steps.review.outputs.comment-content }}
-          DEPENDENCY_CHANGES: ${{ steps.review.outputs.dependency-changes }}
-          VULNERABLE_CHANGES: ${{ steps.review.outputs.vulnerable-changes }}
-          INVALID_LICENSE_CHANGES: ${{ steps.review.outputs.invalid-license-changes }}
-          DENIED_CHANGES: ${{ steps.review.outputs.denied-changes }}
+      - name: Convert JSON to Markdown Table
+        id: format_table
         run: |
-          echo "=== COMMENT CONTENT ==="
-          echo "$COMMENT_CONTENT"
-          echo
-          echo "=== ALL DEPENDENCY CHANGES ==="
-          echo "$DEPENDENCY_CHANGES" | jq
-          echo
-          echo "=== VULNERABLE CHANGES ==="
-          echo "$VULNERABLE_CHANGES" | jq
-          echo
-          echo "=== INVALID LICENSE CHANGES ==="
-          echo "$INVALID_LICENSE_CHANGES" | jq
-          echo
-          echo "=== DENIED CHANGES ==="
-          echo "$DENIED_CHANGES" | jq
-      - name: Post PR Comment (Formatted)
+          # The JSON input from the previous step
+          DATA='${{ steps.review.outputs.dependency-changes }}'
+          
+          # If data is empty or '[]', provide a fallback message
+          if [ "$DATA" == "[]" ] || [ -z "$DATA" ]; then
+            echo "table-content=_No dependency changes detected._" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          # Use jq to build the table with emojis and clean headers
+          TABLE=$(echo "$DATA" | jq -r '
+            ( ["CHANGE", "NAME", "VERSION", "MANIFEST"] | "| " + join(" | ") + " |" ),
+            ( ["---", "---", "---", "---"] | "| " + join(" | ") + " |" ),
+            (.[] | [
+              (if .change_type == "added" then "🟢 Added" else "🔴 Removed" end),
+              .name,
+              (if .version == "" or .version == null then "-" else .version end),
+              .manifest
+            ] | "| " + join(" | ") + " |")
+          ')
+
+          # Save to output using heredoc to handle newlines
+          echo "table-content<<EOF" >> $GITHUB_OUTPUT
+          echo "$TABLE" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+      - name: Post PR Comment
         if: ${{ always() }}
         uses: peter-evans/create-or-update-comment@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           issue-number: ${{ github.event.pull_request.number }}
           body: |
-            <h2>Dependency Review Results</h2>
-            <p>The following issues were detected in this PR:</p>
+            ## 🛡️ Dependency Review Report
+            
+            ### 📦 Dependency Changes
+            ${{ steps.format_table.outputs.table-content }}
 
-            **All changes:**
-            ${{steps.review.outputs.dependency-changes}}
-
-            **Vulnerable Dependencies:**
-            ${{ steps.review.outputs.vulnerable-changes }}
-
-            **Invalid License Changes:**
-            ${{ steps.review.outputs.invalid-license-changes }}
-
-            **Denied Changes:**
-            ${{ steps.review.outputs.denied-changes }}
-
-            <p>Please address these issues before merging.</p>
-    
+            ---
+            **⚠️ Security & License Alerts:**
+            - **Vulnerable Changes:** ${{ steps.review.outputs.vulnerable-changes != '[]' && steps.review.outputs.vulnerable-changes || '_None_' }}
+            - **License Issues:** ${{ steps.review.outputs.invalid-license-changes != '[]' && steps.review.outputs.invalid-license-changes || '_None_' }}
