@@ -27,4 +27,6 @@ jobs:
         with:
           comment-summary-in-pr: always
           fail-on-severity: moderate
+          base-ref: ${{ github.event.inputs.base_ref }}
+          head-ref: ${{ github.event.inputs.head_ref }}
           
