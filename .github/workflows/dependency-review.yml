@@ -4,6 +4,15 @@ on:
   pull_request:
     branches: [ "main" ]
   workflow_dispatch:
+    inputs:
+      base_ref:
+        description: 'Base branch for comparison'
+        required: true
+        default: 'main'
+      head_ref:
+        description: 'Head branch for comparison'
+        required: true
+        default: 'feature-branch'
 permissions:
   contents: read
   pull-requests: write
