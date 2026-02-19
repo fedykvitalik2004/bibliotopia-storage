@@ -49,6 +49,9 @@ jobs:
             <h2>Dependency Review Results</h2>
             <p>The following issues were detected in this PR:</p>
 
+            **All changes:**
+            ${{steps.review.outputs.dependency-changes}}
+
             **Vulnerable Dependencies:**
             ${{ steps.review.outputs.vulnerable-changes }}
 
