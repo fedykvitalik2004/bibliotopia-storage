@@ -39,3 +39,24 @@ jobs:
           echo
           echo "=== DENIED CHANGES ==="
           echo "$DENIED_CHANGES" | jq
+      - name: Post PR Comment (Formatted)
+        if: ${{ always() }}
+        uses: peter-evans/create-or-update-comment@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            <h2>Dependency Review Results</h2>
+            <p>The following issues were detected in this PR:</p>
+
+            **Vulnerable Dependencies:**
+            ${{ steps.review.outputs.vulnerable-changes }}
+
+            **Invalid License Changes:**
+            ${{ steps.review.outputs.invalid-license-changes }}
+
+            **Denied Changes:**
+            ${{ steps.review.outputs.denied-changes }}
+
+            <p>Please address these issues before merging.</p>
+    
