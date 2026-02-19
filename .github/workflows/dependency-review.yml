@@ -12,8 +12,30 @@ jobs:
     steps:
       - name: 'Checkout repository'
         uses: actions/checkout@v4
-      - name: 'Dependency Review'
+      - id: review
         uses: actions/dependency-review-action@v4
         with:
           comment-summary-in-pr: always
-          fail-on-severity: moderate          
+          fail-on-severity: moderate       
+      - name: Show all outputs safely
+        env:
+          COMMENT_CONTENT: ${{ steps.review.outputs.comment-content }}
+          DEPENDENCY_CHANGES: ${{ steps.review.outputs.dependency-changes }}
+          VULNERABLE_CHANGES: ${{ steps.review.outputs.vulnerable-changes }}
+          INVALID_LICENSE_CHANGES: ${{ steps.review.outputs.invalid-license-changes }}
+          DENIED_CHANGES: ${{ steps.review.outputs.denied-changes }}
+        run: |
+          echo "=== COMMENT CONTENT ==="
+          echo "$COMMENT_CONTENT"
+          echo
+          echo "=== ALL DEPENDENCY CHANGES ==="
+          echo "$DEPENDENCY_CHANGES" | jq
+          echo
+          echo "=== VULNERABLE CHANGES ==="
+          echo "$VULNERABLE_CHANGES" | jq
+          echo
+          echo "=== INVALID LICENSE CHANGES ==="
+          echo "$INVALID_LICENSE_CHANGES" | jq
+          echo
+          echo "=== DENIED CHANGES ==="
+          echo "$DENIED_CHANGES" | jq
