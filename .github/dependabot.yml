@@ -5,7 +5,6 @@ updates:
       - "/code"
       - "/code/api-rest"
       - "/code/application"
-      - "/code/api-rest"
       - "/code/boot"
       - "/code/coverage"
       - "/code/domain"
