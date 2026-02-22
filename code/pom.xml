@@ -37,7 +37,7 @@
         <skip.unit.tests>false</skip.unit.tests>
         <skip.integration.tests>false</skip.integration.tests>
 
-        <lombok.version>1.18.38</lombok.version>
+        <lombok.version>1.18.42</lombok.version>
         <google.zxing.version>3.5.3</google.zxing.version>
     </properties>
 
