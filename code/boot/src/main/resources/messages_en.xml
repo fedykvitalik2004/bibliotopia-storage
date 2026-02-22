@@ -21,4 +21,5 @@
     <entry key="exception.file_processing.failed_reading_bytes">Failed to read bytes from the file</entry>
     <entry key="exception.file_processing.not_null_bucket_name">Bucket name cannot be null or empty</entry>
     <entry key="exception.not_null_output_stream">Output stream cannot be null</entry>
+    <entry key="exception.file_upload_not_initialized">File upload was not initialized</entry>
 </properties>

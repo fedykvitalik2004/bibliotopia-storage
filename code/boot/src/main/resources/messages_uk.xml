@@ -21,4 +21,5 @@
     <entry key="exception.file_processing.failed_reading_bytes">Не вдалося зчитати байти з файлу</entry>
     <entry key="exception.file_processing.not_null_bucket_name">Назва бакета не може бути порожньою або null</entry>
     <entry key="exception.not_null_output_stream">Вихідний потік не може бути null</entry>
+    <entry key="exception.file_upload_not_initialized">Завантаження файлу не було ініціалізоване</entry>
 </properties>

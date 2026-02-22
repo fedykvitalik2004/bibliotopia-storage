@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.vitalii.fedyk.compression.CompressorFactory;
 import org.vitalii.fedyk.compression.ImageCompressorPort;
+import org.vitalii.fedyk.minio.exception.FileStorageException;
 import org.vitalii.fedyk.minio.model.ChunkUploadRequest;
 import org.vitalii.fedyk.minio.model.CompleteRequest;
 import org.vitalii.fedyk.minio.model.FileStorageResult;
@@ -120,7 +121,6 @@ public class FileManagementServiceImpl implements FileManagementService {
 
   @Override
   public StorageInfo completeUpload(final String appName, final CompleteRequest completeRequest) {
-    final String accessUrl = this.fileStorageService.completeUpload(appName, completeRequest);
     final Optional<StorageInfo> storageInfoMaybe =
         this.storageInfoRepository
             .findByBucketNameAndObjectName(appName, completeRequest.fileName())
@@ -129,7 +129,10 @@ public class FileManagementServiceImpl implements FileManagementService {
                   storageInfo.setComplete(true);
                   return storageInfo;
                 });
-    final StorageInfo storageInfo = storageInfoMaybe.orElseThrow();
+    final StorageInfo storageInfo =
+        storageInfoMaybe.orElseThrow(
+            () -> new FileStorageException("exception.file_upload_not_initialized", null));
+    final String accessUrl = this.fileStorageService.completeUpload(appName, completeRequest);
     final StorageInfo saved = this.storageInfoRepository.save(storageInfo);
     return saved.toBuilder().url(accessUrl).build();
   }
