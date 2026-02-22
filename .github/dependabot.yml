@@ -1,27 +1,36 @@
 version: 2
 updates:
   - package-ecosystem: "maven"
-    directory: "/code"
+    directories: 
+      - "/code"
+      - "/code/api-rest"
+      - "/code/application"
+      - "/code/api-rest"
+      - "/code/boot"
+      - "/code/coverage"
+      - "/code/domain"
+      - "/code/infrastructure"
+    assignees:
+      - "fedykvitalik2004"
     schedule:
       interval: "weekly"
-    groups:
-      spring:
-        applies-to: all
-        patterns:
-          - "org.springframework*"
-          - "org.springframework.boot*"
-    labels:
-      - "spring"
-      - "dependencies"
-    commit-message:
-      prefix: "[maven][spring] "
-    
-
-  - package-ecosystem: "maven"
-    directory: "/code"
-    schedule:
-      interval: "weekly"
-    labels:
-      - "dependencies"
     commit-message:
       prefix: "[maven] "
+
+  - package-ecosystem: "docker"
+    directory: "/code"
+    assignees:
+      - "fedykvitalik2004"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "[docker] "
+
+  - package-ecosystem: "docker-compose"
+    directory: "/code"
+    assignees:
+      - "fedykvitalik2004"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "[docker-compose] "
