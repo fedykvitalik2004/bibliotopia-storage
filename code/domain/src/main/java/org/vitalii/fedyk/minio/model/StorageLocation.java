@@ -1,6 +1,7 @@
 package org.vitalii.fedyk.minio.model;
 
 import java.util.Objects;
+import lombok.Builder;
 
 /**
  * A record representing the storage location of an object in a bucket.
@@ -8,6 +9,7 @@ import java.util.Objects;
  * @param bucketName the name of the bucket where the object is stored
  * @param objectKey the name of the object within the bucket
  */
+@Builder
 public record StorageLocation(String bucketName, String objectKey) {
   /**
    * The compact constructor for {@code StorageLocation}. This constructor is implicitly called to

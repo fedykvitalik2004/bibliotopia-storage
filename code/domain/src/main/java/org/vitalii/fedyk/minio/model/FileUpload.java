@@ -1,3 +1,5 @@
 package org.vitalii.fedyk.minio.model;
 
-public record FileUpload(String fileName, byte[] content, String contentType, long size) {}
+import java.io.InputStream;
+
+public record FileUpload(String fileName, InputStream content, String contentType, long size) {}

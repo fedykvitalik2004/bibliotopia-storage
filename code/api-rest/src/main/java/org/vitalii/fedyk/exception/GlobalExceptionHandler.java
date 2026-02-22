@@ -1,5 +1,6 @@
 package org.vitalii.fedyk.exception;
 
+import java.io.UncheckedIOException;
 import java.util.Locale;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,6 +16,16 @@ import org.vitalii.fedyk.common.exception.LocalizedException;
 @AllArgsConstructor
 public class GlobalExceptionHandler {
   private MessageSource messageSource;
+
+  @ExceptionHandler(UncheckedIOException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public ErrorResponse handleUncheckedIOException(
+      final UncheckedIOException uncheckedIOException, final Locale locale) {
+    return ErrorResponse.builder()
+        .message(uncheckedIOException.getMessage())
+        .locale(locale)
+        .build();
+  }
 
   @ExceptionHandler(LocalizedException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)

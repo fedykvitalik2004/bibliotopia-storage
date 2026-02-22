@@ -39,8 +39,14 @@
 
         <dependency>
             <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-ui</artifactId>
-            <version>1.7.0</version>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.8.13</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-scalar</artifactId>
+            <version>2.8.13</version>
         </dependency>
 
         <dependency>
@@ -67,11 +73,21 @@
                             <inputSpec>${project.basedir}/src/main/resources/bibliotopia-storage-openapi.yaml</inputSpec>
                             <generatorName>spring</generatorName>
                             <generateApis>true</generateApis>
+                            <modelNameSuffix>Dto</modelNameSuffix>
+                            <schemaMappings>Resource=org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody</schemaMappings>
                             <configOptions>
                                 <sourceFolder>src/gen/java/main</sourceFolder>
                                 <interfaceOnly>true</interfaceOnly>
                                 <useTags>true</useTags>
                                 <useJakartaEe>true</useJakartaEe>
+                                <typeMappings>
+                                    <typeMapping>string+binary=StreamingResponseBody</typeMapping>
+                                </typeMappings>
+                                <importMappings>
+                                    <importMapping>
+                                        StreamingResponseBody=org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody
+                                    </importMapping>
+                                </importMappings>
                             </configOptions>
                         </configuration>
                     </execution>
