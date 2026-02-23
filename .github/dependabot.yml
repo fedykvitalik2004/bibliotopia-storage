@@ -9,6 +9,7 @@ updates:
       interval: "weekly"
     commit-message:
       prefix: "[maven] "
+    open-pull-requests-limit: 50
 
   - package-ecosystem: "docker"
     directory: "/code"
