@@ -3,12 +3,6 @@ updates:
   - package-ecosystem: "maven"
     directories: 
       - "/code"
-      - "/code/api-rest"
-      - "/code/application"
-      - "/code/boot"
-      - "/code/coverage"
-      - "/code/domain"
-      - "/code/infrastructure"
     assignees:
       - "fedykvitalik2004"
     schedule:
