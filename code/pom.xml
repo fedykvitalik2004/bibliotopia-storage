@@ -50,7 +50,7 @@
        <dependency>
             <groupId>org.apache.druid.extensions</groupId>
             <artifactId>druid-basic-security</artifactId>
-            <version>35.0.0</version> <!-- vulnerable -->
+            <version>36.0.0</version> <!-- vulnerable -->
        </dependency>      
        <dependency>
             <groupId>org.mapstruct</groupId>
