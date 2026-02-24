@@ -46,7 +46,12 @@
             <groupId>org.xwiki.platform</groupId>
             <artifactId>xwiki-platform-rest-server</artifactId>
             <version>15.10.15</version>
-       </dependency>
+       </dependency>     
+       <dependency>
+            <groupId>org.apache.druid.extensions</groupId>
+            <artifactId>druid-basic-security</artifactId>
+            <version>35.0.0</version> <!-- vulnerable -->
+       </dependency>      
        <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
