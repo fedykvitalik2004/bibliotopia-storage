@@ -107,7 +107,7 @@ public class StorageController implements StorageApi {
             HttpHeaders.CONTENT_DISPOSITION,
             "attachment; filename="
                 + URLEncoder.encode(
-                    xAppName, StandardCharsets.UTF_8) // This give a name while downloading
+                    xAppName, StandardCharsets.UTF_8) // This gives a name while downloading
                 + ".zip")
         .body(streamingResponseBody);
   }

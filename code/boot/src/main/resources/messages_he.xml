@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <entry key="exception.barcode.invalid_format">פורמט ISBN לא תקין: {0}</entry>
+    <entry key="exception.barcode.general">אירעה שגיאה במהלך יצירת הברקוד</entry>
+
+    <entry key="exception.files_storage.upload_failed">העלאת הקובץ נכשלה</entry>
+    <entry key="exception.files_storage.access_url_generation_failed">יצירת כתובת גישה (URL) נכשלה</entry>
+    <entry key="exception.files_storage.storage_not_available">שירות אחסון הקבצים אינו זמין</entry>
+    <entry key="exception.files_storage.file_not_null">הקובץ אינו יכול להיות ריק (null)</entry>
+    <entry key="exception.files_storage.file_not_empty">תוכן הקובץ אינו יכול להיות ריק</entry>
+    <entry key="exception.files_storage.bucket_creation_failed">יצירת ה-Bucket בשם '{0}' נכשלה</entry>
+    <entry key="exception.files_storage.bucket_existence_check_failed">בדיקת קיום ה-Bucket בשם '{0}' נכשלה</entry>
+    <entry key="exception.files_storage.general">אירעה שגיאה במהלך האחסון</entry>
+    <entry key="exception.files_storage.retrieve_failed">לא ניתן היה לאחזר את האובייקט '{0}' מה-Bucket בשם '{1}'</entry>
+    <entry key="exception.files_storage.upload_part_failed">לא ניתן היה להעלות את חלק {0} של הקובץ '{1}' ל-Bucket בשם '{2}'</entry>
+    <entry key="exception.files_storage.create_multipart_failed">לא ניתן היה להתחיל העלאה מרובת חלקים (multipart) עבור הקובץ '{0}' ב-Bucket בשם '{1}'</entry>
+    <entry key="exception.files_storage.complete_multipart_failed">לא ניתן היה להשלים העלאה מרובת חלקים עבור הקובץ '{0}' ב-Bucket בשם '{1}' (מזהה העלאה: {2})</entry>
+
+    <entry key="exception.file_processing.failed_creating">לא ניתן ליצור קובץ Zip</entry>
+    <entry key="exception.file_processing.failed_reading_bytes">קריאת הנתונים (bytes) מהקובץ נכשלה</entry>
+    <entry key="exception.file_processing.not_null_bucket_name">שם ה-Bucket אינו יכול להיות ריק</entry>
+    <entry key="exception.not_null_output_stream">זרם הפלט (Output stream) אינו יכול להיות ריק</entry>
+    <entry key="exception.file_upload_not_initialized">העלאת הקובץ לא אתחלה</entry>
+</properties>

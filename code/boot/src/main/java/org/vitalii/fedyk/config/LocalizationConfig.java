@@ -6,18 +6,19 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 
 @Configuration
 public class LocalizationConfig {
-  private final Locale defaultLocale = Locale.ENGLISH;
+  private static final Locale defaultLocale = Locale.forLanguageTag("uk");
 
   @Bean
-  public AcceptHeaderLocaleResolver localeResolver() {
+  public LocaleResolver localeResolver() {
     final AcceptHeaderLocaleResolver localeResolver = new AcceptHeaderLocaleResolver();
     localeResolver.setDefaultLocale(defaultLocale);
     // It will resolve by language in this case
-    localeResolver.setSupportedLocales(List.of(defaultLocale, new Locale("uk", "UA")));
+    localeResolver.setSupportedLocales(List.of(defaultLocale, Locale.ENGLISH, new Locale("he")));
     return localeResolver;
   }
 
@@ -27,6 +28,7 @@ public class LocalizationConfig {
         new ReloadableResourceBundleMessageSource();
     messageSource.setBasename("classpath:messages");
     messageSource.setDefaultEncoding("UTF-8");
+    messageSource.setCacheSeconds(3600);
     messageSource.setFallbackToSystemLocale(false);
     return messageSource;
   }
