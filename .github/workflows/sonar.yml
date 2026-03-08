@@ -2,7 +2,7 @@ name: SonarCloud Analysis
 on:
   push:
     branches:
-     - main
+      - main
   pull_request:
     types:
       - opened
@@ -11,23 +11,24 @@ on:
 
 jobs:
   sonarcloud:
-    name: Sonarcloud analysis
+    name: SonarCloud analysis
     runs-on: ubuntu-22.04
-
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '21'
-          
-      - name: SonarCloud scan
+
+      - name: Build with Maven
+        run: mvn clean verify -DskipTests
+
+      - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2.1.0
-        with:
-          projectKey: fedykvitalik2004_bibliotopia-storage
-          organization: bibliotopia
-          token: ${{ secrets.SONAR_TOKEN }}
-          args: mvn clean verify sonar:sonar -DskipTests
-    
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
