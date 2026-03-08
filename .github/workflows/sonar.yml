@@ -24,14 +24,9 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      - name: Build with Maven
-        run: mvn clean verify -DskipTests
+      - name: Build and analyze
         working-directory: ./code
-
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@v2.1.0
-        with:
-          projectBaseDir: ./code
+        run: mvn clean verify sonar:sonar -DskipTests
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
