@@ -112,6 +112,12 @@
                 <version>${google.zxing.version}</version>
             </dependency>
 
+
+            <dependency>
+                <groupId>com.github.depsypher</groupId>
+                <artifactId>pngtastic</artifactId>
+                <version>1.8</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
