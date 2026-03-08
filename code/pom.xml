@@ -27,11 +27,6 @@
     </modules>
 
     <properties>
-        <!--        Sonarqube properties-->
-        <sonar.host.url>http://localhost:9000</sonar.host.url>
-        <sonar.projectKey>bibliotopia-storage</sonar.projectKey>
-        <sonar.projectName>Bibliotopia Storage</sonar.projectName>
-
         <jacoco.utReportFolder>${project.build.directory}/jacoco-unit</jacoco.utReportFolder>
         <jacoco.utReportFile>${jacoco.utReportFolder}/jacoco-unit.exec</jacoco.utReportFile>
         <skip.unit.tests>false</skip.unit.tests>
@@ -42,16 +37,6 @@
     </properties>
 
     <dependencies>
-       <dependency>
-            <groupId>org.xwiki.platform</groupId>
-            <artifactId>xwiki-platform-rest-server</artifactId>
-            <version>15.10.15</version>
-       </dependency>     
-       <dependency>
-            <groupId>org.apache.druid.extensions</groupId>
-            <artifactId>druid-basic-security</artifactId>
-            <version>35.0.0</version> <!-- vulnerable -->
-       </dependency>      
        <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
