@@ -30,6 +30,12 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
 
+        <properties>
+            <sonar.projectKey>fedykvitalik2004_bibliotopia-storage</sonar.projectKey>
+            <sonar.organization>bibliotopia</sonar.organization>
+            <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        </properties>
+
         <jacoco.utReportFolder>${project.build.directory}/jacoco-unit</jacoco.utReportFolder>
         <jacoco.utReportFile>${jacoco.utReportFolder}/jacoco-unit.exec</jacoco.utReportFile>
 
