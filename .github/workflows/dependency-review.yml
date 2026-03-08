@@ -1,0 +1,63 @@
+# Dependency Review Action
+name: 'Dependency review'
+on:
+  pull_request:
+    branches: [ "main" ]
+permissions:
+  contents: read
+  pull-requests: write
+jobs:
+  dependency-review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout repository'
+        uses: actions/checkout@v4
+      - id: review
+        uses: actions/dependency-review-action@v4
+        with:
+          comment-summary-in-pr: always
+          fail-on-severity: moderate       
+      - name: Convert JSON to Markdown Table
+        id: format_table
+        run: |
+          # The JSON input from the previous step
+          DATA='${{ steps.review.outputs.dependency-changes }}'
+          
+          # If data is empty or '[]', provide a fallback message
+          if [ "$DATA" == "[]" ] || [ -z "$DATA" ]; then
+            echo "table-content=_No dependency changes detected._" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          # Use jq to build the table with emojis and clean headers
+          TABLE=$(echo "$DATA" | jq -r '
+            ( ["CHANGE", "NAME", "VERSION", "MANIFEST"] | "| " + join(" | ") + " |" ),
+            ( ["---", "---", "---", "---"] | "| " + join(" | ") + " |" ),
+            (.[] | [
+              (if .change_type == "added" then "🟢 Added" else "🔴 Removed" end),
+              .name,
+              (if .version == "" or .version == null then "-" else .version end),
+              .manifest
+            ] | "| " + join(" | ") + " |")
+          ')
+
+          # Save to output using heredoc to handle newlines
+          echo "table-content<<EOF" >> $GITHUB_OUTPUT
+          echo "$TABLE" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+      - name: Post PR Comment
+        if: ${{ always() }}
+        uses: peter-evans/create-or-update-comment@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            ## 🛡️ Dependency Review Report
+            
+            ### 📦 Dependency Changes
+            ${{ steps.format_table.outputs.table-content }}
+
+            ---
+            **⚠️ Security & License Alerts:**
+            - **Vulnerable Changes:** ${{ steps.review.outputs.vulnerable-changes != '[]' && steps.review.outputs.vulnerable-changes || '_None_' }}
+            - **License Issues:** ${{ steps.review.outputs.invalid-license-changes != '[]' && steps.review.outputs.invalid-license-changes || '_None_' }}
