@@ -29,22 +29,16 @@
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
-        <!--        Sonarqube properties-->
-        <sonar.host.url>http://localhost:9000</sonar.host.url>
-        <sonar.projectKey>bibliotopia-storage</sonar.projectKey>
-        <sonar.projectName>Bibliotopia Storage</sonar.projectName>
 
         <jacoco.utReportFolder>${project.build.directory}/jacoco-unit</jacoco.utReportFolder>
         <jacoco.utReportFile>${jacoco.utReportFolder}/jacoco-unit.exec</jacoco.utReportFile>
-        <skip.unit.tests>false</skip.unit.tests>
-        <skip.integration.tests>false</skip.integration.tests>
 
         <lombok.version>1.18.38</lombok.version>
         <google.zxing.version>3.5.3</google.zxing.version>
     </properties>
 
     <dependencies>
-        <dependency>
+       <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
             <version>1.6.3</version>
