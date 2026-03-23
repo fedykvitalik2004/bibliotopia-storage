@@ -1,0 +1,13 @@
+springdoc:
+  api-docs:
+    enabled: false
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/bibliotopia
+    username: user
+    password: user-pwd
+minio:
+  access-key-id: minio_admin
+  secret-key: password
+  url-internal: http://localhost:9090
+  url-external: http://localhost:9090

@@ -7,7 +7,7 @@ To ensure your local database schema is synchronized with your current code, you
 Before running this command, ensure your Docker container is up and running (e.g., docker compose up -d). From the project root, run:
 
 ```bash
-mvn flyway:migrate -Dflyway.url=jdbc:postgresql://localhost:5432/bibliotopia -Dflyway.user=user -Dflyway.password=user-pwd
+mvn flyway:migrate -pl boot -Dflyway.url=jdbc:postgresql://localhost:5432/bibliotopia -Dflyway.user=user -Dflyway.password=user-pwd
 ```
 
 ## Testing Setup
