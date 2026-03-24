@@ -20,10 +20,10 @@ public class StorageInfoQueryRepositoryImpl implements StorageInfoQueryRepositor
   public List<StorageBucketStats> getBucketsWithStats() {
     final Session session = this.entityManager.unwrap(Session.class);
     return session.doReturningWork(
-            connection -> {
-              connection.setReadOnly(true);
-              final String sql =
-                      """
+        connection -> {
+          connection.setReadOnly(true);
+          final String sql =
+              """
                               SELECT bucket_name,
                                      COUNT(*) AS count,
                                      SUM(CASE WHEN complete THEN 1 ELSE 0 END) AS completed_count,
@@ -33,23 +33,23 @@ public class StorageInfoQueryRepositoryImpl implements StorageInfoQueryRepositor
                               ORDER BY latest_created_at DESC
                               """;
 
-              final List<StorageBucketStats> result = new ArrayList<>();
+          final List<StorageBucketStats> result = new ArrayList<>();
 
-              try (final PreparedStatement preparedStatement = connection.prepareStatement(sql);
-                   final ResultSet resultSet = preparedStatement.executeQuery()) {
+          try (final PreparedStatement preparedStatement = connection.prepareStatement(sql);
+              final ResultSet resultSet = preparedStatement.executeQuery()) {
 
-                while (resultSet.next()) {
-                  result.add(
-                          StorageBucketStats.builder()
-                                  .bucketName(resultSet.getString("bucket_name"))
-                                  .totalCount(resultSet.getInt("count"))
-                                  .completedCount(resultSet.getInt("completed_count"))
-                                  .latestCreatedAt(
-                                          resultSet.getObject("latest_created_at", OffsetDateTime.class))
-                                  .build());
-                }
-              }
-              return result;
-            });
+            while (resultSet.next()) {
+              result.add(
+                  StorageBucketStats.builder()
+                      .bucketName(resultSet.getString("bucket_name"))
+                      .totalCount(resultSet.getInt("count"))
+                      .completedCount(resultSet.getInt("completed_count"))
+                      .latestCreatedAt(
+                          resultSet.getObject("latest_created_at", OffsetDateTime.class))
+                      .build());
+            }
+          }
+          return result;
+        });
   }
 }
