@@ -1,6 +1,6 @@
 services:
   app_db:
-    image: postgres:17
+    image: postgres:18
     container_name: postgres_db
     environment:
       POSTGRES_USER: ${APP_DB_USER}
