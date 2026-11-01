@@ -30,7 +30,7 @@ jobs:
 
       - name: Run unit tests
         working-directory: code
-        run: ./mvnw --batch-mode --no-transfer-progress clean test
+        run: ./mvnw --batch-mode --no-transfer-progress clean verify
 
       - name: Publish Surefire results
         if: always()
@@ -42,11 +42,50 @@ jobs:
           fail-on-error: false
           fail-on-empty: false
 
+      - name: Add JaCoCo coverage to job summary
+        if: always()
+        working-directory: code
+        run: |
+          python3 - <<'PY'
+          import os
+          import xml.etree.ElementTree as ET
+          from pathlib import Path
+
+          report = Path("boot/target/site/jacoco-aggregate/jacoco.xml")
+          summary = Path(os.environ["GITHUB_STEP_SUMMARY"])
+          if not report.exists():
+              summary.write_text("## Unit test coverage\n\nJaCoCo report was not generated.\n")
+              raise SystemExit(0)
+
+          root = ET.parse(report).getroot()
+          labels = {
+              "INSTRUCTION": "Instructions",
+              "BRANCH": "Branches",
+              "LINE": "Lines",
+              "METHOD": "Methods",
+              "CLASS": "Classes",
+          }
+          counters = {counter.attrib["type"]: counter.attrib for counter in root.findall("counter")}
+          lines = ["## Unit test coverage", "", "| Metric | Coverage | Covered / Total |", "|---|---:|---:|"]
+          for kind, label in labels.items():
+              counter = counters.get(kind)
+              if counter is None:
+                  continue
+              covered = int(counter["covered"])
+              total = covered + int(counter["missed"])
+              percent = (covered / total * 100) if total else 100.0
+              lines.append(f"| {label} | {percent:.1f}% | {covered} / {total} |")
+          summary.write_text("\n".join(lines) + "\n")
+          PY
+
       - name: Upload Surefire reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: surefire-reports
-          path: 'code/**/target/surefire-reports/*'
+          name: unit-test-and-coverage-reports
+          path: |
+            code/**/target/surefire-reports/*
+            code/boot/target/site/jacoco-aggregate/**
+            code/**/target/site/jacoco-unit/**
           if-no-files-found: warn
           retention-days: 14
