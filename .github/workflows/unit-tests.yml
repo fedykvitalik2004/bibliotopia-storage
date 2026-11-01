@@ -26,8 +26,10 @@ jobs:
           distribution: temurin
           java-version: '21'
           cache: maven
+          cache-dependency-path: code/pom.xml
 
       - name: Run unit tests
+        working-directory: code
         run: ./mvnw --batch-mode --no-transfer-progress clean test
 
       - name: Publish Surefire results
@@ -35,7 +37,7 @@ jobs:
         uses: dorny/test-reporter@v2
         with:
           name: Surefire unit test results
-          path: '**/target/surefire-reports/TEST-*.xml'
+          path: 'code/**/target/surefire-reports/TEST-*.xml'
           reporter: java-junit
           fail-on-error: false
           fail-on-empty: false
@@ -45,6 +47,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: surefire-reports
-          path: '**/target/surefire-reports/*'
+          path: 'code/**/target/surefire-reports/*'
           if-no-files-found: warn
           retention-days: 14
