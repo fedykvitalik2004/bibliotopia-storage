@@ -137,6 +137,7 @@
                             <goal>prepare-agent</goal>
                         </goals>
                         <configuration>
+                            <propertyName>jacocoArgLine</propertyName>
                             <destFile>${jacoco.utReportFile}</destFile>
                         </configuration>
                     </execution>
@@ -159,7 +160,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.5.3</version>
                 <configuration>
-                    <argLine>@{argLine}</argLine>
+                    <argLine>@{jacocoArgLine}</argLine>
                     <includes>
                         <include>**/*Test.java</include>
                     </includes>

@@ -54,9 +54,6 @@
                         </goals>
                         <configuration>
                             <includeCurrentProject>true</includeCurrentProject>
-                            <dataFileIncludes>
-                                <dataFileInclude>jacoco-unit.exec</dataFileInclude>
-                            </dataFileIncludes>
                         </configuration>
                     </execution>
                 </executions>
