@@ -66,7 +66,21 @@ jobs:
               "CLASS": "Classes",
           }
           counters = {counter.attrib["type"]: counter.attrib for counter in root.findall("counter")}
-          lines = ["## Unit test coverage", "", "| Metric | Coverage | Covered / Total |", "|---|---:|---:|"]
+          instruction_counter = counters.get("INSTRUCTION")
+          if instruction_counter:
+              covered = int(instruction_counter["covered"])
+              total = covered + int(instruction_counter["missed"])
+              overall = (covered / total * 100) if total else 100.0
+              lines = [
+                  "## Unit test coverage",
+                  "",
+                  f"**Overall project code coverage: {overall:.1f}%** (instructions)",
+                  "",
+                  "| Metric | Coverage | Covered / Total |",
+                  "|---|---:|---:|",
+              ]
+          else:
+              lines = ["## Unit test coverage", "", "| Metric | Coverage | Covered / Total |", "|---|---:|---:|"]
           for kind, label in labels.items():
               counter = counters.get(kind)
               if counter is None:
