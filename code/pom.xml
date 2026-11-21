@@ -21,7 +21,6 @@
         <module>domain</module>
         <module>application</module>
         <module>infrastructure</module>
-        <module>api-rest</module>
         <module>boot</module>
     </modules>
 
@@ -61,12 +60,6 @@
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>domain</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>api-rest</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

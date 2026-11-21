@@ -16,11 +16,6 @@
     <dependencies>
         <dependency>
             <groupId>org.vitalii.fedyk</groupId>
-            <artifactId>api-rest</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.vitalii.fedyk</groupId>
             <artifactId>application</artifactId>
         </dependency>
 
