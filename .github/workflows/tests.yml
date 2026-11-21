@@ -26,9 +26,10 @@ jobs:
           distribution: temurin
           java-version: '21'
           cache: maven
-          cache-dependency-path: pom.xml
+          cache-dependency-path: code/pom.xml
 
       - name: Start test containers and wait until ready
+        working-directory: code
         env:
           APP_DB_USER: user
           APP_DB_PASSWORD: user-pwd
@@ -50,6 +51,7 @@ jobs:
           docker compose -f docker-compose.yml -f docker-compose.test.yml ps --all
 
       - name: Apply database schema and test data
+        working-directory: code
         run: >-
           ./mvnw --batch-mode --no-transfer-progress -N flyway:migrate
           -Dflyway.url=jdbc:postgresql://localhost:5432/bibliotopia
@@ -58,6 +60,7 @@ jobs:
           -Dflyway.locations=filesystem:boot/src/main/resources/db/migration,filesystem:boot/src/test/resources/db/testdata
 
       - name: Run unit and integration tests
+        working-directory: code
         run: ./mvnw --batch-mode --no-transfer-progress clean verify
 
       - name: Publish Surefire results
@@ -65,7 +68,7 @@ jobs:
         uses: dorny/test-reporter@v2
         with:
           name: Surefire unit test results
-          path: '**/target/surefire-reports/TEST-*.xml'
+          path: 'code/**/target/surefire-reports/TEST-*.xml'
           reporter: java-junit
           fail-on-error: false
           fail-on-empty: false
@@ -75,7 +78,7 @@ jobs:
         uses: dorny/test-reporter@v2
         with:
           name: Failsafe integration test results
-          path: '**/target/failsafe-reports/TEST-*.xml'
+          path: 'code/**/target/failsafe-reports/TEST-*.xml'
           reporter: java-junit
           fail-on-error: false
           fail-on-empty: false
@@ -89,8 +92,8 @@ jobs:
           from pathlib import Path
 
           reports = [
-              ("Unit test coverage (all modules)", Path("boot/target/site/jacoco-unit-aggregate/jacoco.xml")),
-              ("Integration test coverage (boot + infrastructure)", Path("boot/target/site/jacoco-integration-aggregate/jacoco.xml")),
+              ("Unit test coverage (all modules)", Path("code/boot/target/site/jacoco-unit-aggregate/jacoco.xml")),
+              ("Integration test coverage (boot + infrastructure)", Path("code/boot/target/site/jacoco-integration-aggregate/jacoco.xml")),
           ]
           labels = {
               "INSTRUCTION": "Instructions",
@@ -135,9 +138,9 @@ jobs:
         with:
           name: unit-test-reports
           path: |
-            **/target/surefire-reports/*
-            **/target/site/jacoco-unit/**
-            boot/target/site/jacoco-unit-aggregate/**
+            code/**/target/surefire-reports/*
+            code/**/target/site/jacoco-unit/**
+            code/boot/target/site/jacoco-unit-aggregate/**
           if-no-files-found: warn
           retention-days: 14
 
@@ -147,8 +150,8 @@ jobs:
         with:
           name: integration-test-reports
           path: |
-            **/target/failsafe-reports/*
-            **/target/site/jacoco-integration/**
-            boot/target/site/jacoco-integration-aggregate/**
+            code/**/target/failsafe-reports/*
+            code/**/target/site/jacoco-integration/**
+            code/boot/target/site/jacoco-integration-aggregate/**
           if-no-files-found: warn
           retention-days: 14
