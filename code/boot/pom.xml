@@ -91,28 +91,10 @@
                             <dataFileIncludes>
                                 <dataFileInclude>**/jacoco-integration.exec</dataFileInclude>
                             </dataFileIncludes>
-                            <!-- Exclude code without integration tests from the aggregate integration report. -->
+                            <!-- Keep integration coverage limited to the boot and infrastructure modules. -->
                             <excludes>
-                                <exclude>org/vitalii/fedyk/domain/common/**</exclude>
-                                <exclude>org/vitalii/fedyk/domain/compression/**</exclude>
-                                <exclude>org/vitalii/fedyk/domain/generation/usecase/**</exclude>
-                                <exclude>org/vitalii/fedyk/domain/generation/model/**</exclude>
-                                <exclude>org/vitalii/fedyk/domain/minio/exception/**</exclude>
-                                <exclude>org/vitalii/fedyk/domain/minio/model/**</exclude>
-                                <exclude>org/vitalii/fedyk/domain/minio/usecase/**</exclude>
-                                <exclude>org/vitalii/fedyk/domain/minio/repository/FileStorageRepository</exclude>
-                                <exclude>org/vitalii/fedyk/domain/minio/repository/MinIoHealthRepository</exclude>
-                                <exclude>org/vitalii/fedyk/domain/minio/repository/StorageInfoQueryRepository</exclude>
-                                <exclude>org/vitalii/fedyk/domain/minio/repository/StorageInfoRepository</exclude>
-                                <exclude>org/vitalii/fedyk/application/services/**</exclude>
-                                <exclude>org/vitalii/fedyk/infrastructure/exception/**</exclude>
-                                <exclude>org/vitalii/fedyk/infrastructure/generation/controller/**</exclude>
-                                <exclude>org/vitalii/fedyk/infrastructure/generation/mapper/**</exclude>
-                                <exclude>org/vitalii/fedyk/infrastructure/minio/controller/**</exclude>
-                                <exclude>org/vitalii/fedyk/infrastructure/minio/mapper/ChunkUploadRequestMapper</exclude>
-                                <exclude>org/vitalii/fedyk/infrastructure/minio/mapper/CompleteRequestMapper</exclude>
-                                <exclude>org/vitalii/fedyk/infrastructure/minio/mapper/InitiateUploadResponseMapper</exclude>
-                                <exclude>org/vitalii/fedyk/infrastructure/minio/mapper/StorageInfoDtoMapper</exclude>
+                                <exclude>org/vitalii/fedyk/domain/**</exclude>
+                                <exclude>org/vitalii/fedyk/application/**</exclude>
                             </excludes>
                             <outputDirectory>${project.build.directory}/site/jacoco-integration-aggregate</outputDirectory>
                         </configuration>
