@@ -13,6 +13,11 @@
     <name>${project.groupId}:${project.artifactId}</name>
     <packaging>jar</packaging>
 
+    <properties>
+        <jacoco.skipIntegrationCoverage>false</jacoco.skipIntegrationCoverage>
+        <jacoco.skipIntegrationReport>false</jacoco.skipIntegrationReport>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.vitalii.fedyk</groupId>

@@ -13,6 +13,11 @@
     <name>${project.groupId}:${project.artifactId}</name>
     <packaging>jar</packaging>
 
+    <properties>
+        <jacoco.skipIntegrationCoverage>false</jacoco.skipIntegrationCoverage>
+        <jacoco.skipIntegrationReport>false</jacoco.skipIntegrationReport>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.vitalii.fedyk</groupId>
@@ -86,28 +91,28 @@
                             <dataFileIncludes>
                                 <dataFileInclude>**/jacoco-integration.exec</dataFileInclude>
                             </dataFileIncludes>
-                            <!-- Package-level exclusions are needed because these modules share package prefixes. -->
+                            <!-- Exclude code without integration tests from the aggregate integration report. -->
                             <excludes>
-                                <exclude>org/vitalii/fedyk/common/**</exclude>
-                                <exclude>org/vitalii/fedyk/compression/**</exclude>
-                                <exclude>org/vitalii/fedyk/generation/usecase/**</exclude>
-                                <exclude>org/vitalii/fedyk/generation/model/**</exclude>
-                                <exclude>org/vitalii/fedyk/minio/exception/**</exclude>
-                                <exclude>org/vitalii/fedyk/minio/model/**</exclude>
-                                <exclude>org/vitalii/fedyk/minio/usecase/**</exclude>
-                                <exclude>org/vitalii/fedyk/minio/repository/FileStorageRepository</exclude>
-                                <exclude>org/vitalii/fedyk/minio/repository/MinIoHealthRepository</exclude>
-                                <exclude>org/vitalii/fedyk/minio/repository/StorageInfoQueryRepository</exclude>
-                                <exclude>org/vitalii/fedyk/minio/repository/StorageInfoRepository</exclude>
-                                <exclude>org/vitalii/fedyk/services/**</exclude>
-                                <exclude>org/vitalii/fedyk/exception/**</exclude>
-                                <exclude>org/vitalii/fedyk/generation/controller/**</exclude>
-                                <exclude>org/vitalii/fedyk/generation/mapper/**</exclude>
-                                <exclude>org/vitalii/fedyk/minio/controller/**</exclude>
-                                <exclude>org/vitalii/fedyk/minio/mapper/ChunkUploadRequestMapper</exclude>
-                                <exclude>org/vitalii/fedyk/minio/mapper/CompleteRequestMapper</exclude>
-                                <exclude>org/vitalii/fedyk/minio/mapper/InitiateUploadResponseMapper</exclude>
-                                <exclude>org/vitalii/fedyk/minio/mapper/StorageInfoDtoMapper</exclude>
+                                <exclude>org/vitalii/fedyk/domain/common/**</exclude>
+                                <exclude>org/vitalii/fedyk/domain/compression/**</exclude>
+                                <exclude>org/vitalii/fedyk/domain/generation/usecase/**</exclude>
+                                <exclude>org/vitalii/fedyk/domain/generation/model/**</exclude>
+                                <exclude>org/vitalii/fedyk/domain/minio/exception/**</exclude>
+                                <exclude>org/vitalii/fedyk/domain/minio/model/**</exclude>
+                                <exclude>org/vitalii/fedyk/domain/minio/usecase/**</exclude>
+                                <exclude>org/vitalii/fedyk/domain/minio/repository/FileStorageRepository</exclude>
+                                <exclude>org/vitalii/fedyk/domain/minio/repository/MinIoHealthRepository</exclude>
+                                <exclude>org/vitalii/fedyk/domain/minio/repository/StorageInfoQueryRepository</exclude>
+                                <exclude>org/vitalii/fedyk/domain/minio/repository/StorageInfoRepository</exclude>
+                                <exclude>org/vitalii/fedyk/application/services/**</exclude>
+                                <exclude>org/vitalii/fedyk/infrastructure/exception/**</exclude>
+                                <exclude>org/vitalii/fedyk/infrastructure/generation/controller/**</exclude>
+                                <exclude>org/vitalii/fedyk/infrastructure/generation/mapper/**</exclude>
+                                <exclude>org/vitalii/fedyk/infrastructure/minio/controller/**</exclude>
+                                <exclude>org/vitalii/fedyk/infrastructure/minio/mapper/ChunkUploadRequestMapper</exclude>
+                                <exclude>org/vitalii/fedyk/infrastructure/minio/mapper/CompleteRequestMapper</exclude>
+                                <exclude>org/vitalii/fedyk/infrastructure/minio/mapper/InitiateUploadResponseMapper</exclude>
+                                <exclude>org/vitalii/fedyk/infrastructure/minio/mapper/StorageInfoDtoMapper</exclude>
                             </excludes>
                             <outputDirectory>${project.build.directory}/site/jacoco-integration-aggregate</outputDirectory>
                         </configuration>
