@@ -35,6 +35,8 @@
 
         <jacoco.utReportFolder>${project.build.directory}/site/jacoco-unit</jacoco.utReportFolder>
         <jacoco.utReportFile>${project.build.directory}/jacoco-unit.exec</jacoco.utReportFile>
+        <jacoco.itReportFolder>${project.build.directory}/site/jacoco-integration</jacoco.itReportFolder>
+        <jacoco.itReportFile>${project.build.directory}/jacoco-integration.exec</jacoco.itReportFile>
 
         <lombok.version>1.18.38</lombok.version>
         <google.zxing.version>3.5.3</google.zxing.version>
@@ -142,6 +144,16 @@
                         </configuration>
                     </execution>
                     <execution>
+                        <id>integration-test-coverage-agent</id>
+                        <goals>
+                            <goal>prepare-agent-integration</goal>
+                        </goals>
+                        <configuration>
+                            <propertyName>jacocoItArgLine</propertyName>
+                            <destFile>${jacoco.itReportFile}</destFile>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>unit-test-coverage-report</id>
                         <phase>verify</phase>
                         <goals>
@@ -150,6 +162,17 @@
                         <configuration>
                             <dataFile>${jacoco.utReportFile}</dataFile>
                             <outputDirectory>${jacoco.utReportFolder}</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>integration-test-coverage-report</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <dataFile>${jacoco.itReportFile}</dataFile>
+                            <outputDirectory>${jacoco.itReportFolder}</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>
@@ -168,6 +191,25 @@
                         <exclude>**/*IT.java</exclude>
                     </excludes>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>10.16.0</version>
+                <inherited>false</inherited>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.postgresql</groupId>
+                        <artifactId>postgresql</artifactId>
+                        <version>42.6.2</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.flywaydb</groupId>
+                        <artifactId>flyway-database-postgresql</artifactId>
+                        <version>10.16.0</version>
+                    </dependency>
+                </dependencies>
             </plugin>
 
             <plugin>

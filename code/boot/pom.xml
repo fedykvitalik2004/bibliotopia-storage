@@ -43,6 +43,26 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>3.5.3</version>
+                <executions>
+                    <execution>
+                        <id>integration-tests</id>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                        <configuration>
+                            <argLine>@{jacocoItArgLine}</argLine>
+                            <includes>
+                                <include>**/*IT.java</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <executions>
@@ -54,6 +74,47 @@
                         </goals>
                         <configuration>
                             <includeCurrentProject>true</includeCurrentProject>
+                            <dataFileIncludes>
+                                <dataFileInclude>**/jacoco-unit.exec</dataFileInclude>
+                            </dataFileIncludes>
+                            <outputDirectory>${project.build.directory}/site/jacoco-unit-aggregate</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>aggregate-integration-test-coverage</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report-aggregate</goal>
+                        </goals>
+                        <configuration>
+                            <includeCurrentProject>true</includeCurrentProject>
+                            <dataFileIncludes>
+                                <dataFileInclude>**/jacoco-integration.exec</dataFileInclude>
+                            </dataFileIncludes>
+                            <!-- Package-level exclusions are needed because these modules share package prefixes. -->
+                            <excludes>
+                                <exclude>org/vitalii/fedyk/common/**</exclude>
+                                <exclude>org/vitalii/fedyk/compression/**</exclude>
+                                <exclude>org/vitalii/fedyk/generation/usecase/**</exclude>
+                                <exclude>org/vitalii/fedyk/generation/model/**</exclude>
+                                <exclude>org/vitalii/fedyk/minio/exception/**</exclude>
+                                <exclude>org/vitalii/fedyk/minio/model/**</exclude>
+                                <exclude>org/vitalii/fedyk/minio/usecase/**</exclude>
+                                <exclude>org/vitalii/fedyk/minio/repository/FileStorageRepository</exclude>
+                                <exclude>org/vitalii/fedyk/minio/repository/MinIoHealthRepository</exclude>
+                                <exclude>org/vitalii/fedyk/minio/repository/StorageInfoQueryRepository</exclude>
+                                <exclude>org/vitalii/fedyk/minio/repository/StorageInfoRepository</exclude>
+                                <exclude>org/vitalii/fedyk/services/**</exclude>
+                                <exclude>org/vitalii/fedyk/exception/**</exclude>
+                                <exclude>org/vitalii/fedyk/generation/controller/**</exclude>
+                                <exclude>org/vitalii/fedyk/generation/mapper/**</exclude>
+                                <exclude>org/vitalii/fedyk/minio/controller/**</exclude>
+                                <exclude>org/vitalii/fedyk/minio/mapper/ChunkUploadRequestMapper</exclude>
+                                <exclude>org/vitalii/fedyk/minio/mapper/CompleteRequestMapper</exclude>
+                                <exclude>org/vitalii/fedyk/minio/mapper/InitiateUploadResponseMapper</exclude>
+                                <exclude>org/vitalii/fedyk/minio/mapper/StorageInfoDtoMapper</exclude>
+                            </excludes>
+                            <outputDirectory>${project.build.directory}/site/jacoco-integration-aggregate</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>
@@ -64,24 +125,6 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
 
-            <plugin>
-                <groupId>org.flywaydb</groupId>
-                <artifactId>flyway-maven-plugin</artifactId>
-                <version>10.16.0</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.postgresql</groupId>
-                        <artifactId>postgresql</artifactId>
-                        <version>42.6.2</version>
-                    </dependency>
-
-                    <dependency>
-                        <groupId>org.flywaydb</groupId>
-                        <artifactId>flyway-database-postgresql</artifactId>
-                        <version>10.16.0</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
         </plugins>
     </build>
 

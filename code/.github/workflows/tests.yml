@@ -1,0 +1,154 @@
+name: Tests
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    name: Run unit and integration tests
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: read
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+          cache-dependency-path: pom.xml
+
+      - name: Start test containers and wait until ready
+        env:
+          APP_DB_USER: user
+          APP_DB_PASSWORD: user-pwd
+          APP_DB_NAME: bibliotopia
+          MINIO_USER: minio_admin
+          MINIO_PASSWORD: password
+        run: |
+          docker compose -f docker-compose.yml -f docker-compose.test.yml up -d
+
+          for attempt in $(seq 1 30); do
+            if docker compose -f docker-compose.yml -f docker-compose.test.yml exec -T app_db pg_isready -U user -d bibliotopia; then
+              break
+            fi
+            sleep 2
+          done
+
+          docker compose -f docker-compose.yml -f docker-compose.test.yml exec -T app_db pg_isready -U user -d bibliotopia
+          curl --fail --retry 30 --retry-connrefused --retry-delay 2 --retry-max-time 60 http://localhost:9090/minio/health/live
+          docker compose -f docker-compose.yml -f docker-compose.test.yml ps --all
+
+      - name: Apply database schema and test data
+        run: >-
+          ./mvnw --batch-mode --no-transfer-progress -N flyway:migrate
+          -Dflyway.url=jdbc:postgresql://localhost:5432/bibliotopia
+          -Dflyway.user=user
+          -Dflyway.password=user-pwd
+          -Dflyway.locations=filesystem:boot/src/main/resources/db/migration,filesystem:boot/src/test/resources/db/testdata
+
+      - name: Run unit and integration tests
+        run: ./mvnw --batch-mode --no-transfer-progress clean verify
+
+      - name: Publish Surefire results
+        if: always()
+        uses: dorny/test-reporter@v2
+        with:
+          name: Surefire unit test results
+          path: '**/target/surefire-reports/TEST-*.xml'
+          reporter: java-junit
+          fail-on-error: false
+          fail-on-empty: false
+
+      - name: Publish Failsafe integration test results
+        if: always()
+        uses: dorny/test-reporter@v2
+        with:
+          name: Failsafe integration test results
+          path: '**/target/failsafe-reports/TEST-*.xml'
+          reporter: java-junit
+          fail-on-error: false
+          fail-on-empty: false
+
+      - name: Add JaCoCo coverage to job summary
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import os
+          import xml.etree.ElementTree as ET
+          from pathlib import Path
+
+          reports = [
+              ("Unit test coverage (all modules)", Path("boot/target/site/jacoco-unit-aggregate/jacoco.xml")),
+              ("Integration test coverage (boot + infrastructure)", Path("boot/target/site/jacoco-integration-aggregate/jacoco.xml")),
+          ]
+          labels = {
+              "INSTRUCTION": "Instructions",
+              "BRANCH": "Branches",
+              "LINE": "Lines",
+              "METHOD": "Methods",
+              "CLASS": "Classes",
+          }
+          sections = []
+          for title, report in reports:
+              lines = [f"## {title}", ""]
+              if not report.exists():
+                  lines.extend(["JaCoCo report was not generated.", ""])
+                  sections.append("\n".join(lines))
+                  continue
+
+              root = ET.parse(report).getroot()
+              counters = {counter.attrib["type"]: counter.attrib for counter in root.findall("counter")}
+              instruction_counter = counters.get("INSTRUCTION")
+              if instruction_counter:
+                  covered = int(instruction_counter["covered"])
+                  total = covered + int(instruction_counter["missed"])
+                  overall = (covered / total * 100) if total else 100.0
+                  lines.extend([f"**Overall project code coverage: {overall:.1f}%** (instructions)", ""])
+              lines.extend(["| Metric | Coverage | Covered / Total |", "|---|---:|---:|"])
+              for kind, label in labels.items():
+                  counter = counters.get(kind)
+                  if counter is None:
+                      continue
+                  covered = int(counter["covered"])
+                  total = covered + int(counter["missed"])
+                  percent = (covered / total * 100) if total else 100.0
+                  lines.append(f"| {label} | {percent:.1f}% | {covered} / {total} |")
+              sections.append("\n".join(lines))
+
+          Path(os.environ["GITHUB_STEP_SUMMARY"]).write_text("\n\n".join(sections) + "\n")
+          PY
+
+      - name: Upload unit test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: unit-test-reports
+          path: |
+            **/target/surefire-reports/*
+            **/target/site/jacoco-unit/**
+            boot/target/site/jacoco-unit-aggregate/**
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Upload integration test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: integration-test-reports
+          path: |
+            **/target/failsafe-reports/*
+            **/target/site/jacoco-integration/**
+            boot/target/site/jacoco-integration-aggregate/**
+          if-no-files-found: warn
+          retention-days: 14
